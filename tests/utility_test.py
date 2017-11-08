@@ -1,6 +1,5 @@
 import os
 import sys
-from pytest import raises
 
 # get main directory
 __location__ = os.path.join(os.path.realpath(
@@ -8,37 +7,23 @@ __location__ = os.path.join(os.path.realpath(
 # add it to sys path for imports to work
 sys.path.insert(0, os.path.join(__location__))
 # import project-level modules
-from avc.GPS import GPS, GPS_Exception
 from avc.ConfigReader import ConfigReader
 
 
 
+# TESTS BEGIN
 
+def test_config_is_dictionary():
+	configReader = ConfigReader("conf.json")
+	assert isinstance(configReader.get_config(), dict)
 
-# TESTS:
-
-def test_create_gps_object():
-	gps_object = GPS(fakeconfig)
-	assert isinstance(gps_object, GPS)
-
-def test_gps_serial_connect_failure():
-	gps_object = GPS(fakeconfig)
-	with raises(GPS_Exception):
-		gps_object.start()
-
-# END TESTS
-
-
-
+# TESTS END
 
 
 
 # setup objects for this module
 def setup_module(module):
-	configReader = ConfigReader("conf.json")
-	fakeReader = ConfigReader("testconf.json")
-	module.config = configReader.get_config()
-	module.fakeconfig = fakeReader.get_config()
+	pass
 
 def teardown_module(module):
 	pass

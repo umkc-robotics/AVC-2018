@@ -1,0 +1,9 @@
+{
+
+	"gps": {
+		"port": "COM10",
+		"baud": 9600,
+		"minimum_overlap": 0.0001
+	}
+
+}

@@ -1,8 +1,8 @@
 import pynmea2
 from serial import Serial, SerialException
-from multiprocessing.managers import BaseManager, Process
+from multiprocessing.managers import BaseManager, Process, Pipe
 from collections import namedtuple
-from threading import Event
+from threading import Event, Thread
 from SerialHelper import wait_for_serial_connection
 import sys
 # set up Coordinate class -> named tuple
@@ -17,6 +17,45 @@ GPS_Manager.register('Coordinate',Coordinate)
 # exception type for GPS class
 class GPS_Exception(Exception):
 	pass
+
+
+class ThreadDriver(Thread):
+
+	def __init__(self):
+		self.keep_running = True
+		Thread.__init__(self)
+
+	def run(self):
+		"""
+		Code that runs when thread instance gets started using .start()
+		Returns: None
+		"""
+		pass
+
+	def stop(self):
+		"""
+		Terminates thread cleanly
+		Returns: None
+		"""
+		self.keep_running = False
+
+class ProcessDriver(ThreadDriver):
+
+	def __init__(self):
+		# Process Pipe
+		self.output_pipe, self.input_pipe = Pipe()
+		# Decide whether or not process should be running
+		self.keep_running = True
+		ThreadDriver.__init__(self)
+
+	def run(self):
+		run_process()
+		while self.keep_running:
+			pass
+		# put code here to properly terminate process
+
+	def run_process(self):
+		pass
 
 
 class GPS(object):

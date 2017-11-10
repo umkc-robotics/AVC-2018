@@ -8,8 +8,9 @@ __location__ = os.path.join(os.path.realpath(
 # add it to sys path for imports to work
 sys.path.insert(0, os.path.join(__location__))
 # import project-level modules
-from avc.GPS import GPS, GPS_Exception
+from avc.GPS import GPS, GPS_Exception, ThreadDriver
 from avc.ConfigReader import ConfigReader
+from time import sleep
 
 
 
@@ -25,6 +26,13 @@ def test_gps_serial_connect_failure():
 	gps_object = GPS(fakeconfig)
 	with raises(GPS_Exception):
 		gps_object.start()
+
+def test_see_if_thread_is_fucked():
+	thread_object = ThreadDriver()
+	thread_object.start()
+	sleep(1)
+	print thread_object.raised_exception
+	assert isinstance(thread_object.raised_exception, Exception)
 
 # END TESTS
 

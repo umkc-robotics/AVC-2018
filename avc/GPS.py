@@ -1,6 +1,7 @@
 import pynmea2
 from serial import Serial, SerialException
-from multiprocessing.managers import BaseManager, Process, Pipe
+from multiprocessing.managers import BaseManager
+from multiprocessing import Process, Pipe
 from collections import namedtuple
 from threading import Event, Thread
 from SerialHelper import wait_for_serial_connection
@@ -23,6 +24,7 @@ class ThreadDriver(Thread):
 
 	def __init__(self):
 		self.keep_running = True
+		self.raised_exception = "nothing"
 		Thread.__init__(self)
 
 	def run(self):
@@ -30,7 +32,10 @@ class ThreadDriver(Thread):
 		Code that runs when thread instance gets started using .start()
 		Returns: None
 		"""
-		pass
+		try:
+			raise Exception("ayylmao")
+		except Exception as e:
+			self.raised_exception = e
 
 	def stop(self):
 		"""

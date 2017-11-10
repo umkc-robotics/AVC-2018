@@ -14,6 +14,8 @@ class DriverBase(Thread):
 		self.target = target
 		self.args = args
 		self.kwargs = kwargs
+		# delay times
+		self.process_check_delay = 0.001
 		Thread.__init__(self)
 
 	def run(self):
@@ -55,6 +57,8 @@ class DriverBase(Thread):
 		# close pipe
 		self.comm_pipe.close()
 
+	def set_delay_time(delay):
+		self.process_check_delay = delay
 
 	def is_properly_alive():
 		"""
@@ -72,8 +76,6 @@ class ThreadDriver(DriverBase):
 		self.process_args = args
 		self.process_kwargs = kwargs
 		self.process = None
-		# delay times
-		self.process_check_delay = 0.001
 		# Initialization
 		DriverBase.__init__(self, self.run_thread)
 

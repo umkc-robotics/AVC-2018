@@ -12,6 +12,24 @@ class ThreadTest(ThreadDriver):
 	def handle_input(self, input_obj):
 		self.count = input_obj
 
+class ThreadSelfTest(ThreadDriver):
+	def __init__(self):
+		self.count = 0
+		ThreadDriver.__init__(self, print_stuff, ("ayylmao",))
+	
+	def handle_input(self, input_obj):
+		self.count = input_obj
+
+class ProcessSelfTest(ProcessDriver):
+	def __init__(self):
+		self.count = 0
+		ProcessDriver.__init__(self, print_stuff, ("ayylmao",))
+	
+	def handle_input(self, input_obj):
+		self.count = input_obj
+
+	
+
 class ProcessTest(ProcessDriver):
 	def __init__(self, target, args):
 		self.count = 0
@@ -24,10 +42,11 @@ class ProcessTest(ProcessDriver):
 
 
 def test_see_if_thread_is_messed_up():
-	total_objects = 3
+	total_objects = 8
 	objects = []
 	for i in range(0,total_objects):
-		objects.append(ProcessTest(target=print_stuff, args=("ayylmao",)))
+		objects.append(ProcessTest(target=print_stuff,args=("ayylmao",)))
+		#objects.append(ThreadSelfTest())
 	for i in range(0,total_objects):
 		objects[i].start()
 	sleep(5)
@@ -61,9 +80,13 @@ def print_stuff(stuff, comm_pipe):
 				keep_running = False
 				break
 			count += 1
+			sleep(0.1)
 	# if pipe is being closed, ignore it and close safely
 	except Exception as e:
-		comm_pipe.send(e)
+		try:
+			comm_pipe.send(e)
+		except IOError as e:
+			pass
 
 if __name__ == "__main__":
 	test_see_if_thread_is_messed_up()

@@ -27,8 +27,8 @@ def test_gps_serial_connect_failure():
 	with raises(GPS_Exception):
 		gps_object.start()
 
-def test_see_if_thread_is_fucked():
-	thread_object = ThreadDriver()
+def test_see_if_thread_is_messed_up():
+	thread_object = ThreadDriver(target=print_stuff, args=("ayylmao",))
 	thread_object.start()
 	sleep(1)
 	print thread_object.raised_exception
@@ -36,7 +36,8 @@ def test_see_if_thread_is_fucked():
 
 # END TESTS
 
-
+def print_stuff(stuff):
+	print(stuff)
 
 
 

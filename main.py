@@ -42,10 +42,10 @@ class ProcessTest(ProcessDriver):
 
 
 def test_see_if_thread_is_messed_up():
-	total_objects = 8
+	total_objects = 5
 	objects = []
 	for i in range(0,total_objects):
-		objects.append(ProcessTest(target=print_stuff,args=("ayylmao",)))
+		objects.append(ThreadTest(target=print_stuff,args=("ayylmao",)))
 		#objects.append(ThreadSelfTest())
 	for i in range(0,total_objects):
 		objects[i].start()
@@ -80,7 +80,7 @@ def print_stuff(stuff, comm_pipe):
 				keep_running = False
 				break
 			count += 1
-			sleep(0.1)
+			#sleep(0.1)
 	# if pipe is being closed, ignore it and close safely
 	except Exception as e:
 		try:

@@ -60,12 +60,15 @@ class DriverBase(Thread):
 	def set_delay_time(delay):
 		self.process_check_delay = delay
 
-	def is_properly_alive():
+	def is_properly_alive(self):
 		"""
 		Returns a boolean based on if thread is in an alive state
 		Returns: boolean
 		"""
 		return self.keep_running and self.raised_exception is None
+
+	def get_raised_exception(self):
+		return self.raised_exception
 
 
 class ThreadDriver(DriverBase):

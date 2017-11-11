@@ -1,95 +1,26 @@
 from avc.ConfigReader import ConfigReader
 from avc.GPS import GPS, GPS_Exception
-from avc.AsyncDriver import ThreadDriver, ProcessDriver
 from time import sleep
 
+def create_gps_object(config):
+	gps = GPS(config)
+	gps.start()
+	while gps.is_properly_alive():
+		if gps.is_fixed():
+			print "Location: {}".format(gps.get_location())
+		else:
+			print "No fix yet"
+		sleep(2)
+	print "Exception: {}".format(gps.get_raised_exception())
+	print "done now!"
 
-class ThreadTest(ThreadDriver):
-	def __init__(self, target, args):
-		self.count = 0
-		ThreadDriver.__init__(self, target, args)
-	
-	def handle_input(self, input_obj):
-		self.count = input_obj
-
-class ThreadSelfTest(ThreadDriver):
-	def __init__(self):
-		self.count = 0
-		ThreadDriver.__init__(self, print_stuff, ("ayylmao",))
-	
-	def handle_input(self, input_obj):
-		self.count = input_obj
-
-class ProcessSelfTest(ProcessDriver):
-	def __init__(self):
-		self.count = 0
-		ProcessDriver.__init__(self, print_stuff, ("ayylmao",))
-	
-	def handle_input(self, input_obj):
-		self.count = input_obj
-
-	
-
-class ProcessTest(ProcessDriver):
-	def __init__(self, target, args):
-		self.count = 0
-		ProcessDriver.__init__(self, target, args)
-	
-	def handle_input(self, input_obj):
-		self.count = input_obj
-
-
-
-
-def test_see_if_thread_is_messed_up():
-	total_objects = 5
-	objects = []
-	for i in range(0,total_objects):
-		objects.append(ThreadTest(target=print_stuff,args=("ayylmao",)))
-		#objects.append(ThreadSelfTest())
-	for i in range(0,total_objects):
-		objects[i].start()
-	sleep(5)
-	for i in range(0,total_objects):
-		objects[i].stop()
-	sleep(.1)
-	for i in range(0,total_objects):
-		print "Exception? {},{}".format(i,objects[i].raised_exception)
-	for i in range(0,total_objects):
-		print "Count: {},{}".format(i,objects[i].count)
-	print "Total: {}".format(sum([x.count for x in objects]))
-	print "done now"
-
-
-
-def print_stuff(stuff, comm_pipe):
-	keep_running = True
-	count = 0
-	try:
-		while keep_running:
-			if comm_pipe.poll():
-				received = comm_pipe.recv()
-				print received
-				if received == "EXIT":
-					print "Received SIGNAL TO EXIT"
-					keep_running = False
-			try:
-				if count % 10 == 0:
-					comm_pipe.send(count)
-			except IOError as e:
-				keep_running = False
-				break
-			count += 1
-			#sleep(0.1)
-	# if pipe is being closed, ignore it and close safely
-	except Exception as e:
-		try:
-			comm_pipe.send(e)
-		except IOError as e:
-			pass
 
 if __name__ == "__main__":
-	test_see_if_thread_is_messed_up()
+	config = ConfigReader.read_json("conf.json")
+	print config
+	create_gps_object(config)
+
+	#config = configReader.get_config()
 
 """configReader = ConfigReader("conf.json")
 config = configReader.get_config()

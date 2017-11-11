@@ -5,7 +5,7 @@ from SerialHelper import wait_for_serial_connection
 from time import sleep
 from AsyncDriver import ThreadDriver, ProcessDriver
 # set up Coordinate class -> named tuple
-Coordinate = namedtuple("Coordinate", ["Latitude","Longitude","Timestamp"])
+Coordinate = namedtuple("Coordinate", ["latitude","longitude","timestamp"])
 
 
 
@@ -22,7 +22,10 @@ class GPS(ProcessDriver):
 		ProcessDriver.__init__(self, gps_process, (conf,))
 
 	def is_fixed(self):
-		if self.current_coordinate.Latitude != 0 or self.current_coordinate.Longitude != 0:
+		"""
+		Returns boolean explaining whether or not gps has a fix
+		"""
+		if self.current_coordinate.latitude != 0 or self.current_coordinate.longitude != 0:
 			return True
 		else:
 			return False 
@@ -57,6 +60,7 @@ def gps_process(conf, comm_pipe):
 				received = comm_pipe.recv()
 				if received == "EXIT":
 					keep_running = False
+					break
 			# get serial input
 			data = gps_serial.readline()
 			# check to see if line is type GGA
@@ -67,11 +71,11 @@ def gps_process(conf, comm_pipe):
 				comm_pipe.send(current_coord)
 
 	except Exception as e:
-		#try:
-		print "SENDING ERROR..."
-		comm_pipe.send(e)
-		#except IOError as e:
-		#	pass
+		try:
+			print "SENDING ERROR..."
+			comm_pipe.send(e)
+		except IOError as e:
+			pass
 	finally:
 		if isinstance(gps_serial,Serial):
 			gps_serial.close()

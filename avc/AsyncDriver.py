@@ -1,7 +1,6 @@
 from multiprocessing import Process, Pipe
 from threading import Thread
 from time import sleep
-from sys import exc_info
 
 
 class DriverBase(Thread):

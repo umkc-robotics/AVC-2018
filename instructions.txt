@@ -1,0 +1,5 @@
+To compile phidget22 lib, do:
+./configure --prefix=/usr && make && sudo make install
+
+To install python library for phidget22, do:
+sudo python setup.py install

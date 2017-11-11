@@ -2,7 +2,7 @@
 	"debug": false,
 	"daemon": true,
 	"gps": {
-		"port": "COM10",
+		"port": "/dev/ttyUSB1",
 		"baud": 9600,
 		"minimum_overlap": 0.0001
 	}

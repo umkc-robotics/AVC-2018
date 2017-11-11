@@ -24,18 +24,19 @@ def test_create_gps_object():
 
 def test_gps_serial_connect_failure():
 	gps_object = GPS(fakeconfig)
-	with raises(GPS_Exception):
-		gps_object.start()
+	gps_object.start()
+	# let process attempt to start...
+	sleep(0.5)
+	# verify there was an exception raised by the process
+	assert isinstance(gps_object.get_raised_exception(),Exception)
 
 # END TESTS
 
 
 # setup objects for this module
 def setup_module(module):
-	configReader = ConfigReader("conf.json")
-	fakeReader = ConfigReader("testconf.json")
-	module.config = configReader.get_config()
-	module.fakeconfig = fakeReader.get_config()
+	module.config = ConfigReader.read_json("conf.json")
+	module.fakeconfig = ConfigReader.read_json("testconf.json")
 
 def teardown_module(module):
 	pass

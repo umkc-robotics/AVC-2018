@@ -1,5 +1,6 @@
 {
-
+	"debug": false,
+	"daemon": true,
 	"gps": {
 		"port": "OOF",
 		"baud": 9600,

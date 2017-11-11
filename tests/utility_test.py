@@ -14,8 +14,7 @@ from avc.ConfigReader import ConfigReader
 # TESTS BEGIN
 
 def test_config_is_dictionary():
-	configReader = ConfigReader("conf.json")
-	assert isinstance(configReader.get_config(), dict)
+	assert isinstance(ConfigReader.read_json("conf.json"), dict)
 
 # TESTS END
 

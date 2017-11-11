@@ -1,3 +1,14 @@
+import os
+import sys
+from pytest import raises
+# get main directory
+__location__ = os.path.join(os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__))), "..")
+# add it to sys path for imports to work
+sys.path.insert(0, os.path.join(__location__))
+# import project-level modules
+
+
 from avc.AsyncDriver import ThreadDriver, ProcessDriver
 from time import sleep
 

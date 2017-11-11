@@ -20,6 +20,7 @@ class GPS(ProcessDriver):
 		self.conf = conf
 		self.current_coordinate = Coordinate(0,0,0)
 		ProcessDriver.__init__(self, gps_process, (conf,))
+		self.daemon = conf["daemon"]
 
 	def is_fixed(self):
 		"""

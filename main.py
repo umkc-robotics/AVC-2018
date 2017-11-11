@@ -17,7 +17,7 @@ def create_objects(config):
 			print "Heading: {}".format(compass.get_heading())
 		else:
 			print "Compass NOT connected"
-		sleep(0.5)
+		sleep(0.1)
 	print "Exception: {}".format(gps.get_raised_exception())
 	print "Exception: {}".format(compass.get_raised_exception())
 	gps.stop()

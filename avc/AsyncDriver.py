@@ -91,6 +91,7 @@ class ThreadDriver(DriverBase):
 		self.process_kwargs["comm_pipe"] = comm_pipe
 		
 		self.process = Thread(target=self.process_target,args=self.process_args,kwargs=self.process_kwargs)
+		self.process.daemon = self.daemon
 		self.process.start()
 		# read input pipe
 		while self.keep_running:
@@ -131,6 +132,7 @@ class ProcessDriver(DriverBase):
 		self.process_kwargs["comm_pipe"] = comm_pipe
 		
 		self.process = Process(target=self.process_target,args=self.process_args,kwargs=self.process_kwargs)
+		self.process.daemon = self.daemon
 		self.process.start()
 		# read input pipe
 		while self.keep_running:

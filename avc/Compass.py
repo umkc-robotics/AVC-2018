@@ -24,6 +24,7 @@ class Compass(ProcessDriver):
         self.compass_connected = False
         self.heading = None
         ProcessDriver.__init__(self, compass_process, (conf,))
+        self.daemon = conf["daemon"]
 
     def is_connected(self):
         """
@@ -50,7 +51,6 @@ class Compass(ProcessDriver):
         if isinstance(input_obj, CompassData):
             self.set_direction(input_obj)
         elif isinstance(input_obj, bool):
-            print "RECEIVING A BOOLEAN"
             self.compass_connected = input_obj
 
 

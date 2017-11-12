@@ -1,0 +1,5 @@
+SUBSYSTEM=="tty", ATTRS{idProduct}=="7523", ATTRS{idVendor}=="1a86", SYMLINK+="arduino_avc"
+
+SUBSYSTEM=="tty", ATTRS{serial}=="00E59739", SYMLINK+="gps_avc"
+
+SUBSYSTEM=="block", ATTRS{serial}=="4C530001120805116493", SYMLINK+="avc_flash_drive"

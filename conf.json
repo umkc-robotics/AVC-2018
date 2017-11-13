@@ -5,6 +5,9 @@
 		"port": "/dev/gps_avc",
 		"baud": 9600,
 		"minimum_overlap": 0.0001
+	},
+	"arduino": {
+		"port": "/dev/arduino_avc",
+		"baud": 9600
 	}
-
 }

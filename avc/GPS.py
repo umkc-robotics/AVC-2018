@@ -1,7 +1,6 @@
 import pynmea2
 from serial import Serial, SerialException
 from collections import namedtuple
-from SerialHelper import wait_for_serial_connection
 from time import sleep
 from AsyncDriver import ThreadDriver, ProcessDriver
 # set up Coordinate class -> named tuple
@@ -31,6 +30,19 @@ class GPS(ProcessDriver):
 		else:
 			return False 
 
+	def is_overlapping(self, coordinate):
+		"""
+		Returns boolean corresponding to if provided coordinate overlaps current location
+		"""
+		return False
+
+	def get_desired_heading(self, current_heading, goal_coordinate):
+		"""
+		Returns angle difference between current heading and direction towards goal
+		"""
+		return 0
+
+
 	def get_location(self):
 		"""
 		Returns a Coordinate object corresponding to current location
@@ -54,7 +66,7 @@ def gps_process(conf, comm_pipe):
 			gps_serial = Serial(conf["gps"]["port"],conf["gps"]["baud"])
 		except SerialException as e:
 			raise GPS_Exception(e)
-		print "CONNECTED To GPS"
+		print "CONNECTED TO GPS"
 		while keep_running:
 			# check pipe for messages
 			if comm_pipe.poll():

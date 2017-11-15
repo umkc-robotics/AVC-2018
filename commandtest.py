@@ -98,7 +98,7 @@ def print_dict_normalized(dict1):
 	for key,value in sorted(dict1.iteritems()):
 		print "{}: {:.2f}  -->  {}".format(key,value/max_val,value)
 
-if __name__=="__main__":
+def checksum_distribution():
 	old_dict = {}
 	min_length = 1
 	max_length = 7
@@ -114,5 +114,8 @@ if __name__=="__main__":
 
 	print "-----"
 
+if __name__=="__main__":
+	#print Command("gb")
+	checksum_distribution()
 	#other_dict = get_common_checksums_wrapper(3)
 	#print_dict(other_dict)

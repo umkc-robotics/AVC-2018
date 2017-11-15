@@ -26,7 +26,7 @@ bool waitingForChecksum = false;
 int addTo = 0; // 0 for command, 1 for value
 // output
 String response; // response returned to main program
-byte actualChecksum;
+byte actualChecksum = ' ';
 
 
 
@@ -55,16 +55,16 @@ void parseSerial() {
 
 			char readIn = (char)Serial.read();
 			// process Serial if command is now over
-			if (waitingForChecksum) {
+			if (readIn == '\n') {
+				processSerial();
+			}
+			else if (waitingForChecksum) {
 				checksumChar = readIn;
 				waitingForChecksum = false;
 				continue;
 			}
 			else {
-				if (readIn == '$') {
-					processSerial();
-				}
-				else if (readIn == '*') {
+				if (readIn == '*') {
 					waitingForChecksum = true;
 					continue;
 				}
@@ -103,8 +103,8 @@ void processSerial() {
 	else {
 		response = interpretCommand();
 	}
-	Serial.print(response); //sends response with \n at the end
-	Serial.println((int)actualChecksum);
+	Serial.println(response); //sends response with \n at the end
+	//Serial.println((int)actualChecksum);
 	//showText("message sent: " + response);
 	// empty out command, fullString, and value strings
 	command = "";
@@ -116,7 +116,27 @@ void processSerial() {
 	}
 }
 
+void sendWithChecksum(String command, String value = "") {
+	// First, format message
+	String formatted_msg = command;
+	// add value if provided
+	if (value.length() != 0) {
+		formatted_msg += '|';
+		formatted_msg += value;
+	}
+	// add checksum
+	char checksum_for_msg = (char)calculateChecksum(formatted_msg);
+	formatted_msg += '*';
+	formatted_msg += checksum_for_msg;
+	// Then, send through serial
+	Serial.println(formatted_msg);
+}
+
 bool hasValidChecksum() {
+	// not valid if checksum was not actually changed
+	if (checksumChar == ' ') {
+		return false;
+	}
 	// not valid if message is less than 2 characters
 	if (fullString.length() < 1) {
 		return false;
@@ -146,10 +166,9 @@ String interpretCommand() {
 
 void loop_button() {
 	if (button.wasPressed()) {
-		Serial.println("GOOD PRESSED!");
 		showText("PRESSED!");
+		sendWithChecksum("gb");
 		button.reset();
-		delay(200);
 		showText("");
 	}
 }

@@ -128,8 +128,8 @@ bool hasValidChecksum() {
 
 }
 
-int calculateChecksum(String message) {
-	int calculated_checksum = 0;
+byte calculateChecksum(String message) {
+	byte calculated_checksum = 0;
 	// for every character but the last (checksum byte), do XOR
 	for (int i = 0; i < message.length(); i++) {
 		calculated_checksum ^= message[i];

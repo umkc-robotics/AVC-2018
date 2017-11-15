@@ -159,10 +159,10 @@ class ArduinoComm(ProcessDriver):
 	def handle_input(self, input_obj):
 		if isinstance(input_obj,Command):
 			# check if Go Button pressed command
-			if input_obj.command = "gb":
+			if input_obj.command == "gb":
 				self.button_pressed = True
 			# check if Low Battery command
-			elif input_obj.command = "lb":
+			elif input_obj.command == "lb":
 				pass
 
 	# Send command through pipe

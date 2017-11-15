@@ -20,14 +20,14 @@ def generate_random_strings_with_checksum(repeats):
 			print ord(str(newcommand)[-1])
 			print "------"
 
-def get_common_checksums_wrapper(max_length, min_char=33, max_char=126):
+def get_common_checksums_wrapper(min_length, max_length, min_char=33, max_char=126, max_length_only=True):
 	common_dict = {}
 	message = ""
 	character_list = range(min_char,max_char+1)
-	get_common_checksums(common_dict, message, max_length, character_list)
+	get_common_checksums(common_dict, message, min_length, max_length, character_list, max_length_only)
 	return common_dict
 
-def get_common_checksums(common_dict, message, max_length, character_list):
+def get_common_checksums(common_dict, message, min_length, max_length, character_list, max_length_only):
 	if len(message) > max_length:
 		return False
 	for n in range(33,127):
@@ -38,22 +38,27 @@ def get_common_checksums(common_dict, message, max_length, character_list):
 			continue
 		checksum_char = formatted_message[-1]
 		#common_dict.setdefault(checksum_char,[]).append(formatted_message)
-		if len(message) == max_length:
-			common_dict.setdefault(checksum_char,0)
-			common_dict[checksum_char] += 1
-		if not get_common_checksums(common_dict, new_message, max_length):
+		if len(message) >= min_length:
+			if max_length_only:
+				if len(message) == max_length:
+					common_dict.setdefault(checksum_char,0)
+					common_dict[checksum_char] += 1
+			else:
+				common_dict.setdefault(checksum_char,0)
+				common_dict[checksum_char] += 1
+		if not get_common_checksums(common_dict, new_message, min_length, max_length, character_list, max_length_only):
 			break
 	return True
 
-def get_common_checksums_sparse_wrapper(max_length, sparse_value=94, min_char=33, max_char=126):
+def get_common_checksums_sparse_wrapper(min_length, max_length, sparse_value=94, min_char=33, max_char=126, max_length_only=True):
 	common_dict = {}
 	message = ""
 	character_list = range(min_char,max_char+1)
 	sparse_value = min(sparse_value, 94)
-	get_common_checksums_sparse(common_dict, message, max_length, sparse_value, character_list)
+	get_common_checksums_sparse(common_dict, message, min_length, max_length, sparse_value, character_list, max_length_only)
 	return common_dict
 
-def get_common_checksums_sparse(common_dict, message, max_length, sparse_value, character_list):
+def get_common_checksums_sparse(common_dict, message, min_length, max_length, sparse_value, character_list, max_length_only):
 	if len(message) > max_length:
 		return False
 	#sparse_characters_to_use = sorted(sample(character_list,sparse_value))
@@ -67,10 +72,15 @@ def get_common_checksums_sparse(common_dict, message, max_length, sparse_value, 
 			continue
 		checksum_char = formatted_message[-1]
 		#common_dict.setdefault(checksum_char,[]).append(formatted_message)
-		if len(message) == max_length:
-			common_dict.setdefault(checksum_char,0)
-			common_dict[checksum_char] += 1
-		if not get_common_checksums_sparse(common_dict, new_message, max_length, sparse_value, character_list):
+		if len(message) >= min_length:
+			if max_length_only:
+				if len(message) == max_length:
+					common_dict.setdefault(checksum_char,0)
+					common_dict[checksum_char] += 1
+			else:
+				common_dict.setdefault(checksum_char,0)
+				common_dict[checksum_char] += 1
+		if not get_common_checksums_sparse(common_dict, new_message, min_length, max_length, sparse_value, character_list, max_length_only):
 			break
 	return True
 
@@ -83,16 +93,24 @@ def print_dict(dict1):
 	for key,value in sorted(dict1.iteritems()):
 		print "{}: {}".format(key,value)
 
+def print_dict_normalized(dict1):
+	max_val = float(max(dict1.values()))
+	for key,value in sorted(dict1.iteritems()):
+		print "{}: {:.2f}  -->  {}".format(key,value/max_val,value)
+
 if __name__=="__main__":
 	old_dict = {}
+	min_length = 1
+	max_length = 7
+	max_length_only=False
 	min_char = 97#33
 	max_char = 122#126
-	sparse_value = 3
-	repetitions = 1
+	sparse_value = 3 # branching factor (don't exceed max_char-min_char); affects time exponentially
+	repetitions = 7 # repeats; affects time linearly
 	for n in range(repetitions):
-		new_dict = get_common_checksums_sparse_wrapper(11,sparse_value,min_char,max_char)
+		new_dict = get_common_checksums_sparse_wrapper(min_length, max_length,sparse_value,min_char,max_char,max_length_only)
 		combine_dicts(old_dict,new_dict)
-	print_dict(old_dict)
+	print_dict_normalized(old_dict)
 
 	print "-----"
 

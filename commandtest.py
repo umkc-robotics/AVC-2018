@@ -67,7 +67,10 @@ def get_common_checksums_sparse(common_dict, message, min_length, max_length, sp
 	for n in sparse_characters_to_use:
 		new_message = message + str(unichr(n))
 		try:
-			formatted_message = str(Command(new_message))
+			if len(new_message) > 1:
+				formatted_message = str(Command(new_message[0],new_message[1:]))
+			else:
+				formatted_message = str(Command(new_message))
 		except CommandException as e:
 			continue
 		checksum_char = formatted_message[-1]
@@ -101,12 +104,12 @@ def print_dict_normalized(dict1):
 def checksum_distribution():
 	old_dict = {}
 	min_length = 1
-	max_length = 7
+	max_length = 6 # depth of tree (where each node + leaf is a possible string)
 	max_length_only=False
 	min_char = 97#33
 	max_char = 122#126
-	sparse_value = 3 # branching factor (don't exceed max_char-min_char); affects time exponentially
-	repetitions = 7 # repeats; affects time linearly
+	sparse_value = 2 # branching factor (don't exceed max_char-min_char); affects time exponentially
+	repetitions = 10000 # repeats; affects time linearly
 	for n in range(repetitions):
 		new_dict = get_common_checksums_sparse_wrapper(min_length, max_length,sparse_value,min_char,max_char,max_length_only)
 		combine_dicts(old_dict,new_dict)

@@ -48,6 +48,15 @@ def test_command_list_value():
 	assert command.get_command() == command_string
 	assert command.get_values() == [value_string]
 
+def test_command_formatted_string():
+	command_string = "testcommand"
+	value_string = "testvalue"
+	proper_beginning = command_string + "|" + value_string
+	command = Command(command_string,[value_string])
+	assert command.get_formatted_string().startswith(proper_beginning)
+	assert command.get_formatted_string()[-2] == "*"
+	assert command.get_formatted_string()[-1] == Command.get_checksum(proper_beginning)
+
 # END TESTS
 
 

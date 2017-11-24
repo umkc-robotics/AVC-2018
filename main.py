@@ -10,9 +10,7 @@ def create_objects(config):
 	compass = Compass(config)
 	arduino = ArduinoComm(config)
 	gps.start()
-	sleep(0.1)
 	compass.start()
-	sleep(0.1)
 	arduino.start()
 	# wait for go button to be pressed
 	sleep(1)

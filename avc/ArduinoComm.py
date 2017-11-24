@@ -151,6 +151,10 @@ class ArduinoComm(ProcessDriver):
 		cmd = Command("rst")
 		self.send_through_pipe(cmd)
 
+	def commandCheckButton(self):
+		cmd = Command("gb")
+		self.send_through_pipe(cmd)
+
 	# Getters
 	def is_pressed(self):
 		return self.button_pressed
@@ -164,6 +168,8 @@ class ArduinoComm(ProcessDriver):
 			# check if Low Battery command
 			elif input_obj.command == "lb":
 				pass
+		else:
+			print "RECEIVED WEIRD INPUT: {}".format(input_obj)
 
 	# Send command through pipe
 	def send_through_pipe(self, command):

@@ -1,11 +1,12 @@
 from multiprocessing import Process, Pipe
-from threading import Thread
+from threading import Thread, Lock
 from time import sleep
 
 
 class DriverBase(Thread):
 
 	def __init__(self, target, args=tuple(), kwargs=dict()):
+		Thread.__init__(self)
 		# Process Pipes
 		self.comm_pipe = None
 		self.keep_running = True
@@ -13,9 +14,10 @@ class DriverBase(Thread):
 		self.target = target
 		self.args = args
 		self.kwargs = kwargs
+		# locks
+		self.error_lock = Lock()
 		# delay times
 		self.process_check_delay = 0.001
-		Thread.__init__(self)
 
 	def run(self):
 		"""
@@ -32,8 +34,10 @@ class DriverBase(Thread):
 				except Exception as e:
 					self.handle_error(e)
 		except Exception as e:
+			self.error_lock.acquire()
 			self.raised_exception = e
 			self.keep_running = False
+			self.error_lock.release()
 
 	def handle_input(self, input_obj):
 		pass
@@ -44,6 +48,7 @@ class DriverBase(Thread):
 		Returns: None
 		Raises: Some form of exception, likely the error parameter
 		"""
+		print "RECEIVED ERROR"
 		raise error
 
 	def stop(self):
@@ -64,22 +69,29 @@ class DriverBase(Thread):
 		Returns a boolean based on if thread is in an alive state
 		Returns: boolean
 		"""
-		return self.keep_running and self.raised_exception is None
+		self.error_lock.acquire()
+		keep_running = self.keep_running;
+		raised_exception = self.raised_exception
+		self.error_lock.release()
+		return keep_running and raised_exception is None
 
 	def get_raised_exception(self):
-		return self.raised_exception
+		self.error_lock.acquire()
+		raised_exception = self.raised_exception
+		self.error_lock.release()
+		return raised_exception
 
 
 class ThreadDriver(DriverBase):
 
 	def __init__(self, target, args=tuple(), kwargs=dict()):
+		# Initialization
+		DriverBase.__init__(self, self.run_thread)
 		# Process Data
 		self.process_target = target
 		self.process_args = args
 		self.process_kwargs = kwargs
 		self.process = None
-		# Initialization
-		DriverBase.__init__(self, self.run_thread)
 
 	def run_thread(self, comm_pipe):
 		"""
@@ -112,6 +124,8 @@ class ThreadDriver(DriverBase):
 class ProcessDriver(DriverBase):
 
 	def __init__(self, target, args=tuple(), kwargs=dict()):
+		# Initialization
+		DriverBase.__init__(self, self.run_process)
 		# Process Data
 		self.process_target = target
 		self.process_args = args
@@ -119,8 +133,6 @@ class ProcessDriver(DriverBase):
 		self.process = None
 		# delay times
 		self.process_check_delay = 0.001
-		# Initialization
-		DriverBase.__init__(self, self.run_process)
 
 	def run_process(self, comm_pipe):
 		"""

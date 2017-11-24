@@ -53,6 +53,8 @@ class GPS(ProcessDriver):
 		# if input is a Coordinate object, set coordinate to that object
 		if isinstance(input_obj, Coordinate):
 			self.current_coordinate = input_obj
+		else:
+			print "RECEIVED WEIRD INPUT: {}".format(input_obj)
 
 
 
@@ -88,7 +90,7 @@ def gps_process(conf, comm_pipe):
 			print "SENDING ERROR..."
 			comm_pipe.send(e)
 		except IOError as e:
-			pass
+			print "IO ERROR on GPS"
 	finally:
 		if isinstance(gps_serial,Serial):
 			gps_serial.close()

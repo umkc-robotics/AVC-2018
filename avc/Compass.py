@@ -52,6 +52,8 @@ class Compass(ProcessDriver):
             self.set_direction(input_obj)
         elif isinstance(input_obj, bool):
             self.compass_connected = input_obj
+        else:
+            print "RECEIVED WEIRD INPUT: {}".format(input_obj)
 
 
 
@@ -69,7 +71,7 @@ def compass_process(conf, comm_pipe):
         ch.setOnMagneticFieldChangeHandler(MagneticFieldChangeHandler)
         # now wait for attachment
         print("Waiting for the Phidget Magnetometer Object to be attached...")
-        ch.openWaitForAttachment(5000)
+        ch.openWaitForAttachment(100)
         # send confirmation the magnetometer was found
         comm_pipe.send(True)
         while keep_running:

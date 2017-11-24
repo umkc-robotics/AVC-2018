@@ -42,8 +42,6 @@ void setup() {
 void loop() {
 	// parse serial for commands
 	parseSerial();
-	// do button stuff
-	loop_button();
 }
 
 void parseSerial() {
@@ -104,8 +102,6 @@ void processSerial() {
 		response = interpretCommand();
 	}
 	Serial.println(response); //sends response with \n at the end
-	//Serial.println((int)actualChecksum);
-	//showText("message sent: " + response);
 	// empty out command, fullString, and value strings
 	command = "";
 	fullString = "";

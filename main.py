@@ -24,9 +24,11 @@ def create_objects(config):
 		else:
 			print "Compass NOT connected"
 		sleep(0.1)
+	# print possible exceptions
 	print "Exception ({}): {}".format("GPS",gps.get_raised_exception())
 	print "Exception ({}): {}".format("COMPASS",compass.get_raised_exception())
 	print "Exception ({}): {}".format("ARDUINO",arduino.get_raised_exception())
+	# stop all processes
 	gps.stop()
 	compass.stop()
 	arduino.stop()

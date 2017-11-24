@@ -16,6 +16,7 @@ class Command(object):
 	special_chars = ["|","*"]
 
 	def __init__(self, command, values=None):
+		self.command = None
 		self.values = None
 		self.set_command(command)
 		if values is not None:
@@ -30,6 +31,8 @@ class Command(object):
 			raise CommandException("command must be a string, not {}".format(type(command)))
 		elif any(ch in command for ch in self.special_chars):
 			raise CommandException("command cannot include '|' or '*' characters")
+		elif len(command) == 0:
+			raise CommandException("command cannot be an empty string")
 		else:
 			self.command = command
 
@@ -42,19 +45,31 @@ class Command(object):
 		proper_type = False
 		if isinstance(values, str):
 			proper_type = True
-			if not self.is_valid_string(values):
+			values = [values]
+			value = values[0]
+			if not self.is_valid_string(value):
 				raise CommandException("values cannot include '|' or '*' characters")
+			elif len(value) == 0:
+				raise CommandException("values cannot be an empty string")
 		elif isinstance(values, list):
 			proper_type = True
 			for value in values:
 				if not self.is_valid_string(value):
 					raise CommandException("values cannot include '|' or '*' characters")
+				elif len(value) == 0:
+					raise CommandException("values cannot be an empty string")
 		# if proper type, assign value
 		if proper_type:
 			self.values = values
 		# otherwise, raise exception
 		else:
 			raise CommandException("values must be a string or a list, not {}".format(type(values)))
+
+	def get_command(self):
+		return self.command
+
+	def get_values(self):
+		return self.values
 
 	def is_valid_string(self, string):
 		"""
@@ -99,7 +114,17 @@ class Command(object):
 		Returns a Command object initialized with a string, or None if string is not valid
 		Returns: Command object OR None
 		"""
-		pass
+		try:
+			# check if contains values
+			if "|" in fullmessage:
+				full_list = fullmessage.split("|")
+				return Command(full_list[0],full_list[1:])
+			# otherwise, this is just a command
+			else:
+				return Command(fullmessage)
+
+		except CommandException as e:
+			return None
 
 	@staticmethod
 	def get_checksum(message):

@@ -118,10 +118,10 @@ class Command(object):
 		try:
 			# see if length of message is valid
 			if len(fullmessage) < 3:
-				raise CommandException("fullmessage must be at least 3 characters long")
+				raise CommandException("fullmessage must be at least 3 characters long; {}".format(fullmessage))
 			# see if '*' is second to last character
 			if fullmessage[-2] != "*":
-				raise CommandException("the second to last character must be an '*'")
+				raise CommandException("the second to last character must be an '*': {}".format(fullmessage))
 			# see if checksum on the end is valid
 			provided_checksum = fullmessage[-1]
 			fullmessage = fullmessage[:-2]

@@ -64,6 +64,7 @@ void loop() {
 	// parse serial for commands
 	parseSerial();
 	control.performMovement();
+	showText((String)control.get_current_throttle()+'\n'+(String)control.get_current_steering());
 	//loop_button();
 }
 

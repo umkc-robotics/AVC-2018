@@ -23,6 +23,9 @@ public:
 	// attach servos
 	void attachThrottle(int pin, int min_delay, int max_delay);
 	void attachSteering(int pin, int min_delay, int max_delay);
+	// getters
+	int get_current_throttle() { return current_throttle; };
+	int get_current_steering() { return current_steering; };
 	// update servo values
 	void performMovement();
 	// set values for throttle

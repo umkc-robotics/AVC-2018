@@ -112,9 +112,22 @@ class Command(object):
 	def create_command(fullmessage):
 		"""
 		Returns a Command object initialized with a string, or None if string is not valid
-		Returns: Command object OR None
+		Returns: Command object
+		Raises: Command Exception 
 		"""
 		try:
+			# see if length of message is valid
+			if len(fullmessage) < 3:
+				raise CommandException("fullmessage must be at least 3 characters long")
+			# see if '*' is second to last character
+			if fullmessage[-2] != "*":
+				raise CommandException("the second to last character must be an '*'")
+			# see if checksum on the end is valid
+			provided_checksum = fullmessage[-1]
+			fullmessage = fullmessage[:-2]
+			expected_checksum = Command.get_checksum(fullmessage)
+			if not provided_checksum == expected_checksum:
+				raise CommandException("expected checksum to be {}; got {} instead".format(expected_checksum,provided_checksum))
 			# check if contains values
 			if "|" in fullmessage:
 				full_list = fullmessage.split("|")
@@ -122,9 +135,8 @@ class Command(object):
 			# otherwise, this is just a command
 			else:
 				return Command(fullmessage)
-
 		except CommandException as e:
-			return None
+			raise e
 
 	@staticmethod
 	def get_checksum(message):
@@ -200,6 +212,34 @@ class ArduinoComm(ProcessDriver):
 	def send_through_pipe(self, command):
 		self.comm_pipe.send(command)
 
+	@staticmethod
+	def send_command_via_serial(serial_object, command, retries=3):
+		"""
+		Use a serial object to send a command
+		:param serial_object: Serial instance
+		:param command: Command instance
+		:param retries: optional integer parameter for number of retries
+		Returns: boolean corresponding to whether or not command was sent successfully
+		Raises: command exception
+		"""
+		try:
+			retry = 0
+			while retry < retries:	
+				# attempt to write to serial
+				serial_object.write(command.get_formatted_string()+"\n")
+				# wait for response
+				response = serial_object.readline().strip()
+				# if starts with 'n', attempt to resend
+				if response.startswith("n"):
+					retry += 1
+				# otherwise, attempt to get a Command as response 
+				else:
+					return Command.create_command(response[1:])
+		except CommandException as e:
+			raise e
+
+
+
 
 
 def arduino_process(conf, comm_pipe):
@@ -221,7 +261,9 @@ def arduino_process(conf, comm_pipe):
 					keep_running = False
 					break
 				elif isinstance(received, Command):
-					pass
+					response_command = ArduinoComm.send_command_via_serial(arduino_serial, received)
+					# send response command through pipe
+					comm_pipe.send(response_command)
 			# get serial input
 			# validate checksum
 			# turn into Command object

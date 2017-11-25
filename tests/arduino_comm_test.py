@@ -18,13 +18,17 @@ from time import sleep
 
 def test_command_fullstring_with_only_command():
 	command_string = "testcommand"
-	command = Command.create_command(command_string)
+	checksum = Command.get_checksum(command_string)
+	full_string = "{}*{}".format(command_string,checksum)
+	command = Command.create_command(full_string)
 	assert command.get_command() == command_string
 
 def test_command_fullstring_with_values():
 	command_string = "testcommand"
 	value_string = "testvalue"
 	full_string = command_string + "|" + value_string
+	checksum = Command.get_checksum(full_string)
+	full_string += "*{}".format(checksum)
 	command = Command.create_command(full_string)
 	assert command.get_command() == command_string
 	assert command.get_values() == [value_string]

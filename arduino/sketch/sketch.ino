@@ -138,7 +138,6 @@ bool hasValidChecksum() {
 		return false;
 	}
 	actualChecksum = calculateChecksum(fullString);
-	// showText(fullString);
 	// check if resulting byte equals final char
 	return actualChecksum == checksumChar;
 

@@ -7,7 +7,7 @@
 		"minimum_overlap": 0.0001
 	},
 	"arduino": {
-		"port": "COM13",
+		"port": "/dev/arduino_avc",
 		"baud": 9600,
 		"timeout": 1
 	}

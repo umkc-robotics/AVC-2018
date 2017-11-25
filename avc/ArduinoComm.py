@@ -274,8 +274,6 @@ def arduino_process(conf, comm_pipe):
 		# start serial process, raise a ArduinoComm exception if fails
 		try:
 			arduino_serial = Serial(conf["arduino"]["port"],conf["arduino"]["baud"],timeout=conf["arduino"]["timeout"])
-			arduino_serial.close()
-			arduino_serial.open()
 		except SerialException as e:
 			raise ArduinoCommException(e)
 		print "CONNECTED TO ARDUINO"

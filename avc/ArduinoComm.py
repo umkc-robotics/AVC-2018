@@ -185,7 +185,7 @@ class ArduinoComm(ProcessDriver):
 		self.send_through_pipe(cmd)
 
 	# Other Commands
-	def commandResetButton(self):
+	def commandReset(self):
 		cmd = Command("rst")
 		self.send_through_pipe(cmd)
 

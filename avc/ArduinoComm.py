@@ -158,6 +158,7 @@ class ArduinoComm(ProcessDriver):
 	def __init__(self, conf):
 		self.conf = conf
 		self.button_pressed = False
+		self.arduino_ready = False
 		ProcessDriver.__init__(self, arduino_process, (conf,))
 		self.daemon = conf["daemon"]
 
@@ -196,15 +197,31 @@ class ArduinoComm(ProcessDriver):
 	def is_pressed(self):
 		return self.button_pressed
 
+	def is_ready(self):
+		return self.arduino_ready
+
+	# Waiting Loops
+	def wait_for_readiness(self):
+		while self.is_properly_alive() and not self.is_ready():
+			sleep(0.05)
+
+	def wait_for_button_press(self):
+		while self.is_properly_alive() and not self.is_pressed():
+			self.commandCheckButton()
+			sleep(0.25)
+
 	# Input handler
 	def handle_input(self, input_obj):
 		if isinstance(input_obj,Command):
 			# check if Go Button pressed command
 			if input_obj.command == "gb":
-				self.button_pressed = True
+				self.button_pressed = bool(int(input_obj.values[0]))
 			# check if Low Battery command
 			elif input_obj.command == "lb":
 				pass
+			# check if Ready command
+			elif input_obj.command == "ready":
+				self.arduino_ready = True
 		else:
 			print "RECEIVED WEIRD INPUT: {}".format(input_obj)
 
@@ -230,14 +247,21 @@ class ArduinoComm(ProcessDriver):
 				# wait for response
 				response = serial_object.readline().strip()
 				# if starts with 'n', attempt to resend
-				if response.startswith("n"):
+				if len(response) == 1 and response.startswith("n"):
 					retry += 1
 				# otherwise, attempt to get a Command as response 
 				else:
-					return Command.create_command(response[1:])
+					return Command.create_command(response)
 		except CommandException as e:
 			raise e
 
+	@staticmethod
+	def receive_command_via_serial(serial_object):
+		try:
+			response = serial_object.readline().strip()
+			return Command.create_command(response)
+		except CommandException as e:
+			raise e
 
 
 
@@ -249,7 +273,7 @@ def arduino_process(conf, comm_pipe):
 		keep_running = True
 		# start serial process, raise a ArduinoComm exception if fails
 		try:
-			arduino_serial = Serial(conf["arduino"]["port"],conf["arduino"]["baud"])
+			arduino_serial = Serial(conf["arduino"]["port"],conf["arduino"]["baud"],timeout=conf["arduino"]["timeout"])
 		except SerialException as e:
 			raise ArduinoCommException(e)
 		print "CONNECTED TO ARDUINO"
@@ -264,11 +288,10 @@ def arduino_process(conf, comm_pipe):
 					response_command = ArduinoComm.send_command_via_serial(arduino_serial, received)
 					# send response command through pipe
 					comm_pipe.send(response_command)
-			# get serial input
-			# validate checksum
-			# turn into Command object
-			# send proper serial response
-			# send through pipe 
+			# check if there is anything to receive in serial
+			if arduino_serial.in_waiting:
+				received_command = ArduinoComm.receive_command_via_serial(arduino_serial)
+				comm_pipe.send(received_command)
 
 	except Exception as e:
 		try:

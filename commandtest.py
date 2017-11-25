@@ -119,6 +119,11 @@ def checksum_distribution():
 
 if __name__=="__main__":
 	#print Command("gb")
-	checksum_distribution()
+	
+	print Command("ready")
+	#checksum_distribution()
+	
+
+
 	#other_dict = get_common_checksums_wrapper(3)
 	#print_dict(other_dict)

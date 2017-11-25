@@ -12,8 +12,11 @@ def create_objects(config):
 	gps.start()
 	compass.start()
 	arduino.start()
+	# wait for arduino to be ready
+	arduino.wait_for_readiness()
 	# wait for go button to be pressed
-	sleep(1)
+	arduino.wait_for_button_press()
+	
 	while gps.is_properly_alive() and compass.is_properly_alive() and arduino.is_properly_alive():
 		if gps.is_fixed():
 			print "Location: {}".format(gps.get_location())

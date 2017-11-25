@@ -29,12 +29,16 @@ String response; // response returned to main program
 byte actualChecksum = ' ';
 
 
+String formatFullString(String command, String value = "");
+
+
 
 void setup() {
 	button = StartButton(START_BUTTON_PIN);
 	initializeDisplay();
 	initializeButton();
 	Serial.begin(9600);
+	Serial.println(formatFullString("ready"));
 	showText("Ready!");
 }
 
@@ -42,6 +46,7 @@ void setup() {
 void loop() {
 	// parse serial for commands
 	parseSerial();
+	//loop_button();
 }
 
 void parseSerial() {
@@ -94,14 +99,16 @@ void parseSerial() {
 }
 
 void processSerial() {
+	showText("Processing serial input...");
 	// verify checksum
 	if (!hasValidChecksum()) {
-		response = "0";
+		response = "n";
 	}
 	else {
 		response = interpretCommand();
 	}
-	Serial.println(response); //sends response with \n at the end
+	// send response
+	Serial.println(response);
 	// empty out command, fullString, and value strings
 	command = "";
 	fullString = "";
@@ -110,6 +117,21 @@ void processSerial() {
 	for (int i = 0; i < maxValues; i++) {
 		values[i] = "";
 	}
+	showText("Done processing input!");
+}
+
+String formatFullString(String command, String value = "") {
+	String formatted_msg = command;
+	// add value if provided
+	if (value.length() != 0) {
+		formatted_msg += '|';
+		formatted_msg += value;
+	}
+	// add checksum
+	char checksum_for_msg = (char)calculateChecksum(formatted_msg);
+	formatted_msg += '*';
+	formatted_msg += checksum_for_msg;
+	return formatted_msg;
 }
 
 void sendWithChecksum(String command, String value = "") {
@@ -154,16 +176,19 @@ byte calculateChecksum(String message) {
 	return calculated_checksum;
 }
 
-
 String interpretCommand() {
-	return "1";
+	String responseString = "n";
+	if (command == "gb") {
+		responseString = formatFullString("gb",button.wasPressed() ? "1" : "0");
+	}
+	return responseString;
 }
 
 void loop_button() {
 	if (button.wasPressed()) {
 		showText("PRESSED!");
-		sendWithChecksum("gb");
-		button.reset();
+		//sendWithChecksum("gb");
+		//button.reset();
 		showText("");
 	}
 }

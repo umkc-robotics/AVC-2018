@@ -33,6 +33,21 @@ def test_command_fullstring_with_values():
 	assert command.get_command() == command_string
 	assert command.get_values() == [value_string]
 
+def test_command_fullstring_empty_command_error():
+	with raises(CommandException):
+		command = Command.create_command("")
+
+def test_command_fullstring_wrong_checksum_error():
+	with raises(CommandException):
+		command = Command.create_command("a*a")
+
+def test_command_fullstring_invalid_characters_error():
+	with raises(CommandException):
+		bad_command = "bad|command*mydude"
+		bad_string = "{}*{}".format(bad_command,Command.get_checksum(bad_command))
+		command = Command.create_command(bad_string)
+
+
 def test_command_only_command_given():
 	command_string = "testcommand"
 	command = Command(command_string)

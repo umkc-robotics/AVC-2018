@@ -1,15 +1,28 @@
 #include <SPI.h>
 #include <Wire.h>
 #include "StartButton.h"
+#include "ControlAVC.h"
 #include "Adafruit_GFX.h"
 #include "Adafruit_SSD1306.h"
 
 #define START_BUTTON_PIN 2
+#define ESCPIN 8
+#define STRPIN 9
+// command definitions
+#define GOBUTTN "gb"
+#define RESTCMD "rst"
+#define STOPCMD "stop"
+#define FWRDCMD "f"
+#define BWRDCMD "b"
+#define TURNCMD "t"
+#define STRTCMD "s"
 
 // LCD DEFINITION
 Adafruit_SSD1306 display(-1);
 // BUTTON DEFINITION
 StartButton button;
+// CONTROLAVC DEFINITION
+ControlAVC control;
 
 
 
@@ -37,6 +50,10 @@ void setup() {
 	button = StartButton(START_BUTTON_PIN);
 	initializeDisplay();
 	initializeButton();
+	// initialize servos
+	control.attachThrottle(ESCPIN, 1000, 2000);
+	control.attachSteering(STRPIN, 1000, 2000);
+	// Serial initialization
 	Serial.begin(9600);
 	Serial.println(formatFullString("ready"));
 	showText("Ready!");
@@ -46,6 +63,7 @@ void setup() {
 void loop() {
 	// parse serial for commands
 	parseSerial();
+	control.performMovement();
 	//loop_button();
 }
 
@@ -178,8 +196,40 @@ byte calculateChecksum(String message) {
 
 String interpretCommand() {
 	String responseString = "n";
-	if (command == "gb") {
-		responseString = formatFullString("gb",button.wasPressed() ? "1" : "0");
+	// get go button state
+	if (command == GOBUTTN) {
+		responseString = formatFullString(GOBUTTN,button.wasPressed() ? "1" : "0");
+	}
+	// forward throttle
+	else if (command == "f") {
+		control.setForwardThrottle(values[0].toInt());
+		responseString = "1";
+	}
+	// turn angle
+	else if (command == "t") {
+		control.setTurnAngle(values[0].toInt());
+		responseString = "1";
+	}
+	// stop throttle
+	else if (command == "stop") {
+		control.stopThrottle();
+		responseString = "1";
+	}
+	// straighten wheels
+	else if (command == "s") {
+		control.straightenWheels();
+		responseString = "1";
+	}
+	// backward throttle
+	else if (command == "b") {
+		control.setBackwardThrottle(values[0].toInt());
+		responseString = "1";
+	}
+	// reset go button state
+	else if (command == "rst") {
+		button.reset();
+		control.reset();
+		responseString = "1";
 	}
 	return responseString;
 }

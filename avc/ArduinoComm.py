@@ -247,8 +247,11 @@ class ArduinoComm(ProcessDriver):
 				# wait for response
 				response = serial_object.readline().strip()
 				# if starts with 'n', attempt to resend
-				if len(response) == 1 and response.startswith("n"):
-					retry += 1
+				if len(response) == 1:
+					if response.startswith("n"):
+						retry += 1
+					else:
+						return None
 				# otherwise, attempt to get a Command as response 
 				else:
 					return Command.create_command(response)
@@ -286,8 +289,10 @@ def arduino_process(conf, comm_pipe):
 					break
 				elif isinstance(received, Command):
 					response_command = ArduinoComm.send_command_via_serial(arduino_serial, received)
-					# send response command through pipe
-					comm_pipe.send(response_command)
+					# if response_command was None, then there is nothing real to deliver
+					if received_command is not None:
+						# send response command through pipe
+						comm_pipe.send(response_command)
 			# check if there is anything to receive in serial
 			if arduino_serial.in_waiting:
 				received_command = ArduinoComm.receive_command_via_serial(arduino_serial)

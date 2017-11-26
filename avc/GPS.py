@@ -1,10 +1,19 @@
 import pynmea2
 from serial import Serial, SerialException
-from collections import namedtuple
 from time import sleep
+from math import atan2, degrees, sqrt
 from AsyncDriver import ThreadDriver, ProcessDriver
-# set up Coordinate class -> named tuple
-Coordinate = namedtuple("Coordinate", ["latitude","longitude","timestamp"])
+
+# set up Coordinate class 
+class Coordinate(object):
+
+	def __init__(self, latitude, longitude, timestamp=None):
+		self.latitude = latitude
+		self.longitude = longitude
+		self.timestamp = timestamp
+
+	def __str__(self):
+		return "{},{},{}".format(self.latitude,self.longitude,self.timestamp)
 
 
 
@@ -19,6 +28,7 @@ class GPS(ProcessDriver):
 		self.conf = conf
 		self.current_coordinate = Coordinate(0,0,0)
 		ProcessDriver.__init__(self, gps_process, (conf,))
+		self.minimum_overlap = conf["gps"]["minimum_overlap"]
 		self.daemon = conf["daemon"]
 
 	def is_fixed(self):
@@ -34,13 +44,46 @@ class GPS(ProcessDriver):
 		"""
 		Returns boolean corresponding to if provided coordinate overlaps current location
 		"""
-		return False
+		distance = sqrt((coordinate.latitude-self.current_coordinate.latitude)**2 + (coordinate.longitude-self.current_coordinate.longitude)**2)
+		return distance <= self.minimum_overlap
 
 	def get_desired_heading(self, current_heading, goal_coordinate):
 		"""
 		Returns angle difference between current heading and direction towards goal
 		"""
-		return 0
+		desiredAbsoluteHeading = self.calculate_angle_to_node(goal_coordinate)
+		desiredRelativeHeading = desiredAbsoluteHeading - current_heading
+		# make sure the resulting angle is between -179.99... and 180 degrees
+		if desiredRelativeHeading > 180:
+			desiredRelativeHeading -= 360
+		elif desiredRelativeHeading == -180:
+			desiredRelativeHeading = abs(desiredRelativeHeading)
+		elif desiredRelativeHeading < -180:
+			desiredRelativeHeading += 360
+
+		return desiredRelativeHeading
+
+	def calculate_angle_to_node(self, desired):
+		"""
+		Angle obtained when desired coordinate is at following locations:
+		            0
+		            .
+		           /|\
+		            |
+		            |
+		            |
+		-90 <-------X-------> 90
+		            |
+		            |
+		            |
+		           \|/
+		            `
+		           180
+		In the South-West quadrant, angles are between -90 and -179.99...
+		"""
+		xDiff = desired.longitude - self.current_coordinate.longitude
+		yDiff = desired.latitude - self.current_coordinate.latitude
+		return degrees(atan2(yDiff,xDiff))
 
 
 	def get_location(self):

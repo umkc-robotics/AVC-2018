@@ -1,10 +1,4 @@
 import json
-import os
-
-# directory from which this script is ran
-__location__ = os.path.realpath(
-    os.path.join(os.getcwd(), os.path.dirname(__file__)))
-__location__ = os.path.join(__location__, "..")
 
 # config reader exception class
 class ConfigReaderException(Exception):
@@ -14,7 +8,6 @@ class ConfigReaderException(Exception):
 class ConfigReader(object):
     @staticmethod
     def read_json(location):
-        location = os.path.join(__location__,location)
         with open(location, "r") as json_file:
             return json.load(json_file, object_pairs_hook=decode_unicode_hook)
 

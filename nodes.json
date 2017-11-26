@@ -1,0 +1,28 @@
+{
+	"nodes": [
+		{
+			"coordinate": {
+				"latitude": 40.6046,
+				"longitude": -83.1249
+			}
+		},
+		{
+			"coordinate": {
+				"latitude": 40.6046,
+				"longitude": -83.1252
+			}
+		},
+		{
+			"coordinate": {
+				"latitude": 40.6043,
+				"longitude": -83.1252
+			}
+		},
+		{
+			"coordinate": {
+				"latitude": 40.6043,
+				"longitude": -83.1249
+			}
+		}
+	]
+}

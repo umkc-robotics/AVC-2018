@@ -10,5 +10,8 @@
 		"port": "/dev/arduino_avc",
 		"baud": 9600,
 		"timeout": 1
+	},
+	"nodelist": {
+		"file": "nodes.json"
 	}
 }

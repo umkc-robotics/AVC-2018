@@ -2,9 +2,12 @@ from avc.ConfigReader import ConfigReader
 from avc.GPS import GPS, GPS_Exception
 from avc.Compass import Compass, CompassException
 from avc.ArduinoComm import ArduinoComm
+from avc.Nodelist import Nodelist
 from time import sleep
 
 def create_objects(config):
+	# initialize nodelist
+	nodelist = Nodelist(config)
 	# start all processes
 	gps = GPS(config)
 	compass = Compass(config)

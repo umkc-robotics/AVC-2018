@@ -4,11 +4,11 @@ from Phidget22.Devices.Magnetometer import *
 from Phidget22.PhidgetException import *
 from Phidget22.Phidget import *
 from Phidget22.Net import *
+from ConfigReader import ConfigReader, ConfigReaderException
 from AsyncDriver import ThreadDriver, ProcessDriver
 from collections import namedtuple
 from math import atan2, degrees
 # set up CompassData class -> named tuple (x,y,z)
-#CompassData = namedtuple("CompassData", ["x","y","z"])
 
 class CompassData(object):
 
@@ -28,9 +28,11 @@ class Compass(ProcessDriver):
     def __init__(self, conf):
         self.conf = conf
         self.compass_connected = False
+        self.compass_conf = ConfigReader.read_json(conf["compass"]["file"])
         self.heading = None
         ProcessDriver.__init__(self, compass_process, (conf,))
         self.daemon = conf["daemon"]
+        self.declination_deg = conf["declination_deg"]
 
     def is_connected(self):
         """
@@ -44,14 +46,25 @@ class Compass(ProcessDriver):
         """
         return self.heading
 
+    @staticmethod
+    def correct_data_point(point, bias, scalar):
+        # hard iron correction
+        point.x -= bias["x"]
+        point.y -= bias["y"]
+        # soft iron correction
+        point.x *= scalar["x"]
+        point.y *= scalar["y"]
+        return point
+
     def set_direction(self, data):
         """
         Using a CompassData object, calculate current heading
         Returns: None
         """
         # using only x and y coordinate of data, figure out heading
+        data = Compass.correct_data_point(data, self.compass_conf["bias"], self.compass_conf["scalar"])
         radHeading = atan2(data.y,data.x) # NOTE: declination rad taken care of in device
-        self.heading = degrees(radHeading)
+        self.heading = degrees(radHeading) + self.declination_deg
 
     def handle_input(self, input_obj):
         if isinstance(input_obj, CompassData):

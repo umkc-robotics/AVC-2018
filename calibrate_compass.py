@@ -127,13 +127,40 @@ def show_data(data):
 	ax = fig.add_subplot(111)
 	#ax.scatter(x_data,y_data)
 	ax.scatter(x_data,y_data)
+	ax.axis([min(x_data),max(x_data),min(y_data),max(y_data)])
 	matplotlib.pyplot.show()
+
+def matrix_math(valx,valy,mag_scale):
+	vals = [valx,valy]
+	results = [0,0]
+	matrix = [[mag_scale[0],0],[0,mag_scale[1]]]
+	for i in range(0,2):
+		for j in range(0,2):
+			results[i] += matrix[i][j] * vals[j]
+	return (results[0],results[1])
+
+def correct_data_point(point, bias, scalar):
+	# hard iron correction
+	point.x -= bias["x"]
+	point.y -= bias["y"]
+	# soft iron correction
+	point.x *= scalar["x"]
+	point.y *= scalar["y"]
+	
+
+def show_data_with_calibration(data, calibration_data):
+	mag_bias = calibration_data["bias"]
+	mag_scales = calibration_data["scalar"]
+	corrected_data = map(lambda x: correct_data_point(x, mag_bias, mag_scales), data)
+	show_data(corrected_data)
+
 
 def save_calibration_to_file(config,calibration_data):
 	with open(config["compass"]["file"], "w") as calibration_file:
 		calibration_file.write(json.dumps(calibration_data))
 
 def calibration_terminal(config):
+
 	# start compass
 	compass = CompassCalibrator(config)
 	compass.start()
@@ -148,7 +175,8 @@ def calibration_terminal(config):
 			if user_inp == "exit":
 				break
 			elif user_inp == "c":
-				calibration_data = perform_calibration(compass.get_and_reset_data())
+				data_for_calibration = compass.get_and_reset_data()
+				calibration_data = perform_calibration(data_for_calibration)
 				print calibration_data
 				save_calibration_to_file(config,calibration_data)
 				#show_data(calibration_data)

@@ -118,15 +118,16 @@ def perform_calibration(data):
 	return calibration_data
 
 def show_data(data):
-	x_data = map(lambda item: item.x)
-	y_data = map(lambda item: item.y)
+	x_data = map(lambda item: item.x, data)
+	y_data = map(lambda item: item.y, data)
 	#fig = pylab.figure(figsize=[4,4],
 	#					dpi=100,
 	#					)
-	fig = matplotlib.plot.figure()
+	fig = matplotlib.pyplot.figure()
 	ax = fig.add_subplot(111)
 	#ax.scatter(x_data,y_data)
-	ax.plot(x_data,y_data)
+	ax.scatter(x_data,y_data)
+	matplotlib.pyplot.show()
 
 def save_calibration_to_file(config,calibration_data):
 	with open(config["compass"]["file"], "w") as calibration_file:

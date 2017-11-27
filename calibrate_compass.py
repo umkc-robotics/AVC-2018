@@ -87,7 +87,29 @@ class CompassCalibrator(Compass):
 
 
 def perform_calibration(data):
-	pass
+	max_vals = (max(data, key=lambda compass_data: compass_data.x), max(data, key=lambda compass_data: compass_data.y))
+	min_vals = (min(data, key=lambda compass_data: compass_data.x), min(data, key=lambda compass_data: compass_data.y))
+	# hard iron correction
+	mag_bias = [0,0]
+	mag_bias[0] = (max_vals[0] + min_vals[0])/2.0;
+	mag_bias[1] = (max_vals[1] + min_vals[1])/2.0;
+	#soft iron
+	mag_scale = [0,0]
+	mag_scale[0] = (max_vals[0] - min_vals[0])/2.0;
+	mag_scale[1] = (max_vals[1] - min_vals[1])/2.0;
+
+	avg_radius = (mag_scale[0] + mag_scale[1])/2.0
+
+	mag_scales = [0,0]
+	mag_scales[0] = float(avg_radius)/(mag_scale[0])
+	mag_scales[1] = float(avg_radius)/(mag_scale[1])
+
+	# saving into jsonify-able dictionaries
+	biases = { "x": mag_bias[0], "y": mag_bias[1] }
+	scales = { "x": mag_scales[0], "y": mag_scales[1] }
+	calibration_data = { "bias": biases, "scalar": scales}
+	return calibration_data
+
 
 def save_calibration_to_file(config,calibration_data):
 	with open(config["compass"]["file"], "w") as calibration_file:
@@ -103,11 +125,16 @@ def calibration_terminal(config):
 
 	while compass.is_properly_alive():
 		user_inp = userInput.returnMessage()
-		print compass.get_data()
 		if user_inp != None:
-			if user_inp.lower() == "exit":
+			user_inp = user_inp.lower()
+			if user_inp == "exit":
 				break
-		sleep(1)
+			elif user_inp == "c":
+				calibration_data = perform_calibration(compass.get_and_reset_data())
+				print calibration_data
+				save_calibration_to_file(calibration_data)
+
+		sleep(0.2)
 
 
 	compass.stop()

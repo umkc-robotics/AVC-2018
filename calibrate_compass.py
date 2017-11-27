@@ -32,7 +32,7 @@ class UserInput(threading.Thread):
 		while not self.keepGoing.is_set():
 			# wait until message is read
 			if self.newMessage.is_set():
-				time.sleep(0.05)
+				sleep(0.05)
 				continue
 			userinp = raw_input('> ')
 			if userinp.lower() == 'exit':
@@ -89,6 +89,8 @@ class CompassCalibrator(Compass):
 def perform_calibration(data):
 	max_vals = (max(data, key=lambda compass_data: compass_data.x), max(data, key=lambda compass_data: compass_data.y))
 	min_vals = (min(data, key=lambda compass_data: compass_data.x), min(data, key=lambda compass_data: compass_data.y))
+	print max_vals
+	print min_vals
 	# hard iron correction
 	mag_bias = [0,0]
 	mag_bias[0] = (max_vals[0] + min_vals[0])/2.0;

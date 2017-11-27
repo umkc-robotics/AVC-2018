@@ -184,6 +184,10 @@ class ArduinoComm(ProcessDriver):
 		cmd = Command("stop")
 		self.send_through_pipe(cmd)
 
+	def commandBrake(self):
+		cmd = Command("brake")
+		self.send_through_pipe(cmd)
+
 	# Other Commands
 	def commandReset(self):
 		cmd = Command("rst")

@@ -87,8 +87,8 @@ class CompassCalibrator(Compass):
 
 
 def perform_calibration(data):
-	max_vals = (max(data, key=lambda compass_data: compass_data.x), max(data, key=lambda compass_data: compass_data.y))
-	min_vals = (min(data, key=lambda compass_data: compass_data.x), min(data, key=lambda compass_data: compass_data.y))
+	max_vals = (max(data, key=lambda compass_data: compass_data.x).x, max(data, key=lambda compass_data: compass_data.y).y)
+	min_vals = (min(data, key=lambda compass_data: compass_data.x).x, min(data, key=lambda compass_data: compass_data.y).y)
 	print max_vals
 	print min_vals
 	# hard iron correction

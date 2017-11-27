@@ -32,7 +32,7 @@ class Compass(ProcessDriver):
         self.heading = None
         ProcessDriver.__init__(self, compass_process, (conf,))
         self.daemon = conf["daemon"]
-        self.declination_deg = conf["declination_deg"]
+        self.declination_deg = conf["compass"]["declination_deg"]
 
     def is_connected(self):
         """
@@ -63,7 +63,7 @@ class Compass(ProcessDriver):
         """
         # using only x and y coordinate of data, figure out heading
         data = Compass.correct_data_point(data, self.compass_conf["bias"], self.compass_conf["scalar"])
-        radHeading = atan2(data.y,data.x) # NOTE: declination rad taken care of in device
+        radHeading = atan2(-data.x,-data.y) # NOTE: declination rad taken care of in device
         self.heading = degrees(radHeading) + self.declination_deg
 
     def handle_input(self, input_obj):

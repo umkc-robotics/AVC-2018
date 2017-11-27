@@ -1,6 +1,9 @@
-from avc.Compass import Compass, CompassException
+from avc.Compass import Compass, CompassException, CompassData
+from avc.ConfigReader import ConfigReader
 from time import sleep
+from multiprocessing import Pipe
 from matplotlib import pyplot
+import threading
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.backends.backend_agg as agg
@@ -100,7 +103,7 @@ def calibration_terminal(config):
 
 	while compass.is_properly_alive():
 		user_inp = userInput.returnMessage()
-		print compass.
+		print compass.get_data()
 		if user_inp != None:
 			if user_inp.lower() == "exit":
 				break
@@ -109,7 +112,7 @@ def calibration_terminal(config):
 
 	compass.stop()
 	userInput.markToStop()
-		
+	print compass.get_raised_exception()
 
 
 if __name__ == "__main__":

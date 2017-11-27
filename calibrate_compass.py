@@ -5,8 +5,8 @@ from multiprocessing import Pipe
 from matplotlib import pyplot
 import threading
 import matplotlib
-matplotlib.use("Agg")
-import matplotlib.backends.backend_agg as agg
+#matplotlib.use("Agg")
+#import matplotlib.backends.backend_agg as agg
 import pygame
 import pylab
 import json
@@ -86,11 +86,16 @@ class CompassCalibrator(Compass):
 
 
 
+class UI(object):
+
+	def __init__(self, config):
+		pass
+
+
+
 def perform_calibration(data):
 	max_vals = (max(data, key=lambda compass_data: compass_data.x).x, max(data, key=lambda compass_data: compass_data.y).y)
 	min_vals = (min(data, key=lambda compass_data: compass_data.x).x, min(data, key=lambda compass_data: compass_data.y).y)
-	print max_vals
-	print min_vals
 	# hard iron correction
 	mag_bias = [0,0]
 	mag_bias[0] = (max_vals[0] + min_vals[0])/2.0;
@@ -112,6 +117,16 @@ def perform_calibration(data):
 	calibration_data = { "bias": biases, "scalar": scales}
 	return calibration_data
 
+def show_data(data):
+	x_data = map(lambda item: item.x)
+	y_data = map(lambda item: item.y)
+	#fig = pylab.figure(figsize=[4,4],
+	#					dpi=100,
+	#					)
+	fig = matplotlib.plot.figure()
+	ax = fig.add_subplot(111)
+	#ax.scatter(x_data,y_data)
+	ax.plot(x_data,y_data)
 
 def save_calibration_to_file(config,calibration_data):
 	with open(config["compass"]["file"], "w") as calibration_file:
@@ -135,6 +150,9 @@ def calibration_terminal(config):
 				calibration_data = perform_calibration(compass.get_and_reset_data())
 				print calibration_data
 				save_calibration_to_file(config,calibration_data)
+				#show_data(calibration_data)
+			elif user_inp == "s":
+				show_data(compass.get_data())
 
 		sleep(0.2)
 

@@ -134,7 +134,7 @@ def calibration_terminal(config):
 			elif user_inp == "c":
 				calibration_data = perform_calibration(compass.get_and_reset_data())
 				print calibration_data
-				save_calibration_to_file(calibration_data)
+				save_calibration_to_file(config,calibration_data)
 
 		sleep(0.2)
 

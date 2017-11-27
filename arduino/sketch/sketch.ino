@@ -14,6 +14,7 @@
 #define STOPCMD "stop"
 #define FWRDCMD "f"
 #define BWRDCMD "b"
+#define BRKECMD "brake"
 #define TURNCMD "t"
 #define STRTCMD "s"
 
@@ -139,7 +140,7 @@ void processSerial() {
 	showText("Done processing input!");
 }
 
-String formatFullString(String command, String value = "") {
+String formatFullString(String command, String value) {
 	String formatted_msg = command;
 	// add value if provided
 	if (value.length() != 0) {
@@ -224,6 +225,11 @@ String interpretCommand() {
 	// backward throttle
 	else if (command == "b") {
 		control.setBackwardThrottle(values[0].toInt());
+		responseString = "1";
+	}
+	// brake
+	else if (command == "brake") {
+		control.brake();
 		responseString = "1";
 	}
 	// reset go button state

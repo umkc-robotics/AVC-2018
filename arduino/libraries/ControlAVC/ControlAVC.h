@@ -32,6 +32,7 @@ public:
 	void setForwardThrottle(int throttle);
 	void setBackwardThrottle(int throttle);
 	void stopThrottle();
+	void brake();
 	// set values for steering
 	void setTurnAngle(int angle);
 	void straightenWheels();

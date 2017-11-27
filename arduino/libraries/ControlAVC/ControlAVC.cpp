@@ -37,12 +37,24 @@ void ControlAVC::setBackwardThrottle(int throttle) {
 	else {
 		current_throttle = NEUTRAL;
 	}
-	ESC.write(current_throttle);
+	// if actually told to go backwards, use special movement
+	if (current_throttle != NEUTRAL) {
+		ESC.write(current_throttle);
+		ESC.write(NEUTRAL);
+		ESC.write(current_throttle);
+	}
+	else {
+		ESC.write(current_throttle);
+	}
 }
 
 void ControlAVC::stopThrottle() {
 	current_throttle = NEUTRAL;
 	ESC.write(current_throttle);
+}
+
+void ControlAVC::brake() {
+	ESC.write(NEUTRAL-THROTTLE_DEADZONE);
 }
 
 void ControlAVC::setTurnAngle(int angle) {

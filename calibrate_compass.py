@@ -5,13 +5,8 @@ from multiprocessing import Pipe
 from matplotlib import pyplot
 import threading
 import matplotlib
-#matplotlib.use("Agg")
-#import matplotlib.backends.backend_agg as agg
-import pygame
-import pylab
 import json
 
-pygame.init()
 
 # get user input in a separate thread
 class UserInput(threading.Thread):
@@ -86,13 +81,6 @@ class CompassCalibrator(Compass):
 
 
 
-class UI(object):
-
-	def __init__(self, config):
-		pass
-
-
-
 def perform_calibration(data):
 	max_vals = (max(data, key=lambda compass_data: compass_data.x).x, max(data, key=lambda compass_data: compass_data.y).y)
 	min_vals = (min(data, key=lambda compass_data: compass_data.x).x, min(data, key=lambda compass_data: compass_data.y).y)
@@ -120,49 +108,25 @@ def perform_calibration(data):
 def show_data(data):
 	x_data = map(lambda item: item.x, data)
 	y_data = map(lambda item: item.y, data)
-	#fig = pylab.figure(figsize=[4,4],
-	#					dpi=100,
-	#					)
+
 	fig = matplotlib.pyplot.figure()
 	ax = fig.add_subplot(111)
-	#ax.scatter(x_data,y_data)
+
 	ax.scatter(x_data,y_data)
 	ax.axis([min(x_data),max(x_data),min(y_data),max(y_data)])
 	matplotlib.pyplot.show()
 
-def matrix_math(valx,valy,mag_scale):
-	vals = [valx,valy]
-	results = [0,0]
-	matrix = [[mag_scale[0],0],[0,mag_scale[1]]]
-	for i in range(0,2):
-		for j in range(0,2):
-			results[i] += matrix[i][j] * vals[j]
-	return (results[0],results[1])
-
-def correct_data_point(point, bias, scalar):
-	# hard iron correction
-	point.x -= bias["x"]
-	point.y -= bias["y"]
-	# soft iron correction
-	point.x *= scalar["x"]
-	point.y *= scalar["y"]
-	return point
-	
-
 def show_data_with_calibration(data, calibration_data):
 	mag_bias = calibration_data["bias"]
 	mag_scales = calibration_data["scalar"]
-	corrected_data = map(lambda x: correct_data_point(x, mag_bias, mag_scales), data)
-	#print corrected_data
+	corrected_data = map(lambda x: Compass.correct_data_point(x, mag_bias, mag_scales), data)
 	show_data(corrected_data)
-
 
 def save_calibration_to_file(config,calibration_data):
 	with open(config["compass"]["file"], "w") as calibration_file:
 		calibration_file.write(json.dumps(calibration_data))
 
 def calibration_terminal(config):
-
 	# start compass
 	compass = CompassCalibrator(config)
 	compass.start()
@@ -190,7 +154,8 @@ def calibration_terminal(config):
 
 	compass.stop()
 	userInput.markToStop()
-	print compass.get_raised_exception()
+	if compass.get_raised_exception() is not None:
+		print compass.get_raised_exception()
 
 
 if __name__ == "__main__":

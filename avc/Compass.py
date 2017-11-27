@@ -8,8 +8,14 @@ from AsyncDriver import ThreadDriver, ProcessDriver
 from collections import namedtuple
 from math import atan2, degrees
 # set up CompassData class -> named tuple (x,y,z)
-CompassData = namedtuple("CompassData", ["x","y","z"])
+#CompassData = namedtuple("CompassData", ["x","y","z"])
 
+class CompassData(object):
+
+	def __init__(self, x, y, z):
+		self.x = x
+		self.y = y
+		self.z = z
 
 
 class CompassException(Exception):

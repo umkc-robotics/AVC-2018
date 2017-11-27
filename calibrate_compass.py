@@ -146,12 +146,14 @@ def correct_data_point(point, bias, scalar):
 	# soft iron correction
 	point.x *= scalar["x"]
 	point.y *= scalar["y"]
+	return point
 	
 
 def show_data_with_calibration(data, calibration_data):
 	mag_bias = calibration_data["bias"]
 	mag_scales = calibration_data["scalar"]
 	corrected_data = map(lambda x: correct_data_point(x, mag_bias, mag_scales), data)
+	#print corrected_data
 	show_data(corrected_data)
 
 
@@ -179,7 +181,7 @@ def calibration_terminal(config):
 				calibration_data = perform_calibration(data_for_calibration)
 				print calibration_data
 				save_calibration_to_file(config,calibration_data)
-				#show_data(calibration_data)
+				show_data_with_calibration(data_for_calibration,calibration_data)
 			elif user_inp == "s":
 				show_data(compass.get_data())
 

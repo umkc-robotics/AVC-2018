@@ -1,4 +1,6 @@
 pynmea2
 pyserial
 pytest
+pygame
+matplotlib
 phidget22

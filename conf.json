@@ -6,6 +6,10 @@
 		"baud": 9600,
 		"minimum_overlap": 0.0001
 	},
+	"compass": {
+		"declination_deg": 1.61667,
+		"file": "compass_calibration.json"
+	},
 	"arduino": {
 		"port": "/dev/arduino_avc",
 		"baud": 9600,

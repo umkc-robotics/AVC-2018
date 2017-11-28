@@ -10,7 +10,7 @@ void ControlAVC::attachThrottle(int pin, int min_delay, int max_delay) {
 void ControlAVC::attachSteering(int pin, int min_delay, int max_delay) {
 	STR.attach(pin, min_delay, max_delay);
 	current_steering = NEUTRAL;
-	STR.write(current_steering);	
+	STR.write(current_steering);
 }
 
 void ControlAVC::performMovement() {
@@ -39,8 +39,10 @@ void ControlAVC::setBackwardThrottle(int throttle) {
 	}
 	// if actually told to go backwards, use special movement
 	if (current_throttle != NEUTRAL) {
-		ESC.write(current_throttle);
+		ESC.write(NEUTRAL-MAX_ABS_THROTTLE);
+		delay(50);
 		ESC.write(NEUTRAL);
+		delay(50);
 		ESC.write(current_throttle);
 	}
 	else {

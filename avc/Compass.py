@@ -64,7 +64,13 @@ class Compass(ProcessDriver):
         # using only x and y coordinate of data, figure out heading
         data = Compass.correct_data_point(data, self.compass_conf["bias"], self.compass_conf["scalar"])
         radHeading = atan2(-data.x,-data.y) # NOTE: declination rad taken care of in device
-        self.heading = degrees(radHeading) + self.declination_deg
+        degHeading = degrees(radHeading) + self.declination_deg
+        # make sure the angle is still within bounds after adding declination_deg
+        if degHeading  <= -180:
+            degHeading = 180 - (abs(180) % 180)
+        elif degHeading > 180:
+            degHeading =  -180 + (angle % 180)
+        self.heading = degHeading
 
     def handle_input(self, input_obj):
         if isinstance(input_obj, CompassData):

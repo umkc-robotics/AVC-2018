@@ -18,9 +18,13 @@ def create_objects(config):
 	# wait for arduino to be ready
 	arduino.wait_for_readiness()
 	# wait for gps to be fixed
+	print "waiting for gps fix..."
 	gps.wait_for_fix()
+	print "gps fix found!"
 	# wait for go button to be pressed
+	print "waiting for go button press..."
 	arduino.wait_for_button_press()
+	print "go button pressed!"
 	# get the first node
 	node = nodelist.get_next_node()
 	while not nodelist.all_nodes_visited() and gps.is_properly_alive() and compass.is_properly_alive() and arduino.is_properly_alive():
@@ -29,7 +33,7 @@ def create_objects(config):
 			node = nodelist.get_next_node()
 			continue
 		desiredHeading = gps.get_desired_heading(compass.get_heading(), node)
-		print node
+		print node.get_coordinate()
 		print gps.get_location()
 		print gps.calculate_angle_to_node(node.get_coordinate())
 		print compass.get_heading()

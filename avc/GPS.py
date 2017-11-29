@@ -87,7 +87,8 @@ class GPS(ProcessDriver):
 		"""
 		xDiff = desired.longitude - self.current_coordinate.longitude
 		yDiff = desired.latitude - self.current_coordinate.latitude
-		return degrees(atan2(yDiff,xDiff))
+		angle = degrees(atan2(xDiff,yDiff)) 
+		return angle
 
 
 	def get_location(self):

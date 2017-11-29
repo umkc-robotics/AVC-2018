@@ -26,7 +26,7 @@ class GPS(ProcessDriver):
 
 	def __init__(self, conf):
 		self.conf = conf
-		self.current_coordinate = Coordinate(0,0,0)
+		self.current_coordinate = Coordinate(0,0,None)
 		ProcessDriver.__init__(self, gps_process, (conf,))
 		self.minimum_overlap = conf["gps"]["minimum_overlap"]
 		self.daemon = conf["daemon"]
@@ -35,7 +35,7 @@ class GPS(ProcessDriver):
 		"""
 		Returns boolean explaining whether or not gps has a fix
 		"""
-		if self.current_coordinate.latitude != 0 or self.current_coordinate.longitude != 0:
+		if self.current_coordinate.timestamp is not None:
 			return True
 		else:
 			return False 

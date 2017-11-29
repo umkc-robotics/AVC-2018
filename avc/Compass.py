@@ -67,9 +67,9 @@ class Compass(ProcessDriver):
         degHeading = degrees(radHeading) + self.declination_deg
         # make sure the angle is still within bounds after adding declination_deg
         if degHeading  <= -180:
-            degHeading = 180 - (abs(180) % 180)
+            degHeading = 180 - (abs(degHeading) % 180)
         elif degHeading > 180:
-            degHeading =  -180 + (angle % 180)
+            degHeading =  -180 + (degHeading % 180)
         self.heading = degHeading
 
     def handle_input(self, input_obj):

@@ -38,6 +38,7 @@ def create_objects(config):
 		print gps.calculate_angle_to_node(node.get_coordinate())
 		print compass.get_heading()
 		print "Desired: {}".format(desiredHeading)
+		arduino.commandTurn(desiredHeading)
 		#if gps.is_fixed():
 		#	print "Location: {}".format(gps.get_location())
 		#else:

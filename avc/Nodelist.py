@@ -44,7 +44,7 @@ class Nodelist(object):
 		if not (self.increment_node()):
 			return None
 		else:
-			return self.get_current_node()
+			return self.nodelist[self.current_node_index]
 
 	def all_nodes_visited(self):
 		return self.current_node_index >= len(self.nodelist)

@@ -30,6 +30,8 @@ def create_objects(config):
 			continue
 		desiredHeading = gps.get_desired_heading(compass.get_heading(), node)
 		print node
+		print gps.get_location()
+		print gps.calculate_angle_to_node(node.get_coordinate())
 		print compass.get_heading()
 		print "Desired: {}".format(desiredHeading)
 		#if gps.is_fixed():
@@ -40,7 +42,7 @@ def create_objects(config):
 		#	print "Heading: {}".format(compass.get_heading())
 		#else:
 		#	print "Compass NOT connected"
-		#sleep(0.1)
+		sleep(0.1)
 	# print possible exceptions
 	print "Exception ({}): {}".format("GPS",gps.get_raised_exception())
 	print "Exception ({}): {}".format("COMPASS",compass.get_raised_exception())

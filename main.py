@@ -17,19 +17,30 @@ def create_objects(config):
 	arduino.start()
 	# wait for arduino to be ready
 	arduino.wait_for_readiness()
+	# wait for gps to be fixed
+	gps.wait_for_fix()
 	# wait for go button to be pressed
 	arduino.wait_for_button_press()
-	
-	while gps.is_properly_alive() and compass.is_properly_alive() and arduino.is_properly_alive():
-		if gps.is_fixed():
-			print "Location: {}".format(gps.get_location())
-		else:
-			print "No fix yet"
-		if compass.is_connected():
-			print "Heading: {}".format(compass.get_heading())
-		else:
-			print "Compass NOT connected"
-		sleep(0.1)
+	# get the first node
+	node = nodelist.get_next_node()
+	while not nodelist.all_nodes_visited() and gps.is_properly_alive() and compass.is_properly_alive() and arduino.is_properly_alive():
+		# if at coordinate, get next node and start from top of loop
+		if gps.is_overlapping(node):
+			node = nodelist.get_next_node()
+			continue
+		desiredHeading = gps.get_desired_heading(compass.get_heading(), node)
+		print node
+		print compass.get_heading()
+		print "Desired: {}".format(desiredHeading)
+		#if gps.is_fixed():
+		#	print "Location: {}".format(gps.get_location())
+		#else:
+		#	print "No fix yet"
+		#if compass.is_connected():
+		#	print "Heading: {}".format(compass.get_heading())
+		#else:
+		#	print "Compass NOT connected"
+		#sleep(0.1)
 	# print possible exceptions
 	print "Exception ({}): {}".format("GPS",gps.get_raised_exception())
 	print "Exception ({}): {}".format("COMPASS",compass.get_raised_exception())

@@ -3,6 +3,7 @@ from serial import Serial, SerialException
 from time import sleep
 from math import atan2, degrees, sqrt
 from AsyncDriver import ThreadDriver, ProcessDriver
+from Nodelist import Node
 
 # set up Coordinate class 
 class Coordinate(object):
@@ -44,6 +45,8 @@ class GPS(ProcessDriver):
 		"""
 		Returns boolean corresponding to if provided coordinate overlaps current location
 		"""
+		if isinstance(coordinate, Node):
+			coordinate = Node.get_coordinate()
 		distance = sqrt((coordinate.latitude-self.current_coordinate.latitude)**2 + (coordinate.longitude-self.current_coordinate.longitude)**2)
 		return distance <= self.minimum_overlap
 
@@ -51,6 +54,8 @@ class GPS(ProcessDriver):
 		"""
 		Returns angle difference between current heading and direction towards goal
 		"""
+		if isinstance(goal_coordinate, Node):
+			goal_coordinate = Node.get_coordinate()
 		desiredAbsoluteHeading = self.calculate_angle_to_node(goal_coordinate)
 		desiredRelativeHeading = desiredAbsoluteHeading - current_heading
 		# make sure the resulting angle is between -179.99... and 180 degrees
@@ -90,7 +95,12 @@ class GPS(ProcessDriver):
 		"""
 		Returns a Coordinate object corresponding to current location
 		"""
-		return self.current_coordinate
+		return self.current_coordinate and not self.is_fixed():
+			sleep(0.25)
+
+	# Waiting loop
+	def wait_for_fix(self):
+		while self.is_properly_alive() and not self.is_fixed
 
 	def handle_input(self, input_obj):
 		# if input is a Coordinate object, set coordinate to that object

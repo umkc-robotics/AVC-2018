@@ -99,7 +99,7 @@ class GPS(ProcessDriver):
 
 	# Waiting loop
 	def wait_for_fix(self):
-		while self.is_properly_alive() and not self.is_fixed:
+		while self.is_properly_alive() and not self.is_fixed():
 			sleep(0.25)
 
 	def handle_input(self, input_obj):

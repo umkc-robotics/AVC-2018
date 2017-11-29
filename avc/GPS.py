@@ -26,7 +26,7 @@ class GPS(ProcessDriver):
 
 	def __init__(self, conf):
 		self.conf = conf
-		self.current_coordinate = Coordinate(0,0,0)
+		self.current_coordinate = Coordinate(0,0,None)
 		ProcessDriver.__init__(self, gps_process, (conf,))
 		self.minimum_overlap = conf["gps"]["minimum_overlap"]
 		self.daemon = conf["daemon"]
@@ -35,7 +35,7 @@ class GPS(ProcessDriver):
 		"""
 		Returns boolean explaining whether or not gps has a fix
 		"""
-		if self.current_coordinate.latitude != 0 or self.current_coordinate.longitude != 0:
+		if self.current_coordinate.latitude != 0.0 or self.current_coordinate.longitude != 0.0:
 			return True
 		else:
 			return False 
@@ -44,6 +44,8 @@ class GPS(ProcessDriver):
 		"""
 		Returns boolean corresponding to if provided coordinate overlaps current location
 		"""
+		if isinstance(coordinate, Node):
+			coordinate = coordinate.get_coordinate()
 		distance = sqrt((coordinate.latitude-self.current_coordinate.latitude)**2 + (coordinate.longitude-self.current_coordinate.longitude)**2)
 		return distance <= self.minimum_overlap
 
@@ -51,6 +53,8 @@ class GPS(ProcessDriver):
 		"""
 		Returns angle difference between current heading and direction towards goal
 		"""
+		if isinstance(goal_coordinate, Node):
+			goal_coordinate = goal_coordinate.get_coordinate()
 		desiredAbsoluteHeading = self.calculate_angle_to_node(goal_coordinate)
 		desiredRelativeHeading = desiredAbsoluteHeading - current_heading
 		# make sure the resulting angle is between -179.99... and 180 degrees
@@ -83,7 +87,8 @@ class GPS(ProcessDriver):
 		"""
 		xDiff = desired.longitude - self.current_coordinate.longitude
 		yDiff = desired.latitude - self.current_coordinate.latitude
-		return degrees(atan2(yDiff,xDiff))
+		angle = degrees(atan2(xDiff,yDiff)) 
+		return angle
 
 
 	def get_location(self):
@@ -91,6 +96,11 @@ class GPS(ProcessDriver):
 		Returns a Coordinate object corresponding to current location
 		"""
 		return self.current_coordinate
+
+	# Waiting loop
+	def wait_for_fix(self):
+		while self.is_properly_alive() and not self.is_fixed():
+			sleep(0.25)
 
 	def handle_input(self, input_obj):
 		# if input is a Coordinate object, set coordinate to that object
@@ -137,3 +147,5 @@ def gps_process(conf, comm_pipe):
 	finally:
 		if isinstance(gps_serial,Serial):
 			gps_serial.close()
+
+from Nodelist import Node

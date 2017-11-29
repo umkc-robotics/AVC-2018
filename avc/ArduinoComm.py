@@ -164,7 +164,7 @@ class ArduinoComm(ProcessDriver):
 
 	# Steering Commands
 	def commandTurn(self, angle):
-		cmd = Command("t",angle)
+		cmd = Command("t",str(round(angle)))
 		self.send_through_pipe(cmd)
 
 	def commandStraight(self):
@@ -173,11 +173,11 @@ class ArduinoComm(ProcessDriver):
 
 	# Throttle Commands
 	def commandForward(self, speed):
-		cmd = Command("f",speed)
+		cmd = Command("f",str(speed))
 		self.send_through_pipe(cmd)
 
 	def commandBackward(self, speed):
-		cmd = Command("b",speed)
+		cmd = Command("b",str(speed))
 		self.send_through_pipe(cmd)
 
 	def commandStop(self):
@@ -226,7 +226,7 @@ class ArduinoComm(ProcessDriver):
 			# check if Ready command
 			elif input_obj.command == "ready":
 				self.arduino_ready = True
-		else:
+		elif input_obj is not None:
 			print "RECEIVED WEIRD INPUT: {}".format(input_obj)
 
 	# Send command through pipe

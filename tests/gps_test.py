@@ -73,14 +73,14 @@ def test_gps_angles_make_sense():
 	gps = GPS(config)
 	gps.current_coordinate = Coordinate(35.0000, 85.0000)
 	test_fixtures = []
-	test_fixtures.append( (Coordinate(36.0000, 85.0000), 90) ) # desired is East
+	test_fixtures.append( (Coordinate(35.0000, 86.0000), 90) ) # desired is East
 	test_fixtures.append( (Coordinate(36.0000, 86.0000), 45) ) # desired is North-East
-	test_fixtures.append( (Coordinate(35.0000, 86.0000), 0) ) # desired is North
-	test_fixtures.append( (Coordinate(34.0000, 86.0000), -45) ) # desired is North-West
-	test_fixtures.append( (Coordinate(34.0000, 85.0000), -90) ) # desired is West
+	test_fixtures.append( (Coordinate(36.0000, 85.0000), 0) ) # desired is North
+	test_fixtures.append( (Coordinate(36.0000, 84.0000), -45) ) # desired is North-West
+	test_fixtures.append( (Coordinate(35.0000, 84.0000), -90) ) # desired is West
 	test_fixtures.append( (Coordinate(34.0000, 84.0000), -135) ) # desired is South-West
-	test_fixtures.append( (Coordinate(35.0000, 84.0000), 180) ) # desired is South
-	test_fixtures.append( (Coordinate(36.0000, 84.0000), 135) ) # desired is South-East
+	test_fixtures.append( (Coordinate(34.0000, 85.0000), 180) ) # desired is South
+	test_fixtures.append( (Coordinate(34.0000, 86.0000), 135) ) # desired is South-East
 	test_fixtures.append( (Coordinate(35.0000, 85.0000), 0) ) # desired is Unchanged
 	for coordinate,expected_angle in test_fixtures:
 		calculated_angle = gps.calculate_angle_to_node(coordinate)
@@ -93,41 +93,41 @@ def test_gps_relative_angle_to_goal():
 	gps.current_coordinate = Coordinate(35.0000, 85.0000)
 	test_fixtures = []
 	# Goal is to the East
-	test_fixtures.append( (Coordinate(36.0000, 85.0000), 90, 0) ) # facing East
-	test_fixtures.append( (Coordinate(36.0000, 85.0000), 45, 45) ) # facing North-East
-	test_fixtures.append( (Coordinate(36.0000, 85.0000), 0, 90) ) # facing North
-	test_fixtures.append( (Coordinate(36.0000, 85.0000), -45, 135) ) # facing North-West
-	test_fixtures.append( (Coordinate(36.0000, 85.0000), -90, 180) ) # facing West
-	test_fixtures.append( (Coordinate(36.0000, 85.0000), -135, -135) ) # facing South-West
-	test_fixtures.append( (Coordinate(36.0000, 85.0000), 180, -90) ) # facing South
-	test_fixtures.append( (Coordinate(36.0000, 85.0000), 135, -45) ) # facing South-East
+	test_fixtures.append( (Coordinate(35.0000, 86.0000), 90, 0) ) # facing East
+	test_fixtures.append( (Coordinate(35.0000, 86.0000), 45, 45) ) # facing North-East
+	test_fixtures.append( (Coordinate(35.0000, 86.0000), 0, 90) ) # facing North
+	test_fixtures.append( (Coordinate(35.0000, 86.0000), -45, 135) ) # facing North-West
+	test_fixtures.append( (Coordinate(35.0000, 86.0000), -90, 180) ) # facing West
+	test_fixtures.append( (Coordinate(35.0000, 86.0000), -135, -135) ) # facing South-West
+	test_fixtures.append( (Coordinate(35.0000, 86.0000), 180, -90) ) # facing South
+	test_fixtures.append( (Coordinate(35.0000, 86.0000), 135, -45) ) # facing South-East
 	# Goal is to the North
-	test_fixtures.append( (Coordinate(35.0000, 86.0000), 90, -90) ) # facing East
-	test_fixtures.append( (Coordinate(35.0000, 86.0000), 45, -45) ) # facing North-East
-	test_fixtures.append( (Coordinate(35.0000, 86.0000), 0, 0) ) # facing North
-	test_fixtures.append( (Coordinate(35.0000, 86.0000), -45, 45) ) # facing North-West
-	test_fixtures.append( (Coordinate(35.0000, 86.0000), -90, 90) ) # facing West
-	test_fixtures.append( (Coordinate(35.0000, 86.0000), -135, 135) ) # facing South-West
-	test_fixtures.append( (Coordinate(35.0000, 86.0000), 180, 180) ) # facing South
-	test_fixtures.append( (Coordinate(35.0000, 86.0000), 135, -135) ) # facing South-East
+	test_fixtures.append( (Coordinate(36.0000, 85.0000), 90, -90) ) # facing East
+	test_fixtures.append( (Coordinate(36.0000, 85.0000), 45, -45) ) # facing North-East
+	test_fixtures.append( (Coordinate(36.0000, 85.0000), 0, 0) ) # facing North
+	test_fixtures.append( (Coordinate(36.0000, 85.0000), -45, 45) ) # facing North-West
+	test_fixtures.append( (Coordinate(36.0000, 85.0000), -90, 90) ) # facing West
+	test_fixtures.append( (Coordinate(36.0000, 85.0000), -135, 135) ) # facing South-West
+	test_fixtures.append( (Coordinate(36.0000, 85.0000), 180, 180) ) # facing South
+	test_fixtures.append( (Coordinate(36.0000, 85.0000), 135, -135) ) # facing South-East
 	# Goal is to the West
-	test_fixtures.append( (Coordinate(34.0000, 85.0000), 90, 180) ) # facing East
-	test_fixtures.append( (Coordinate(34.0000, 85.0000), 45, -135) ) # facing North-East
-	test_fixtures.append( (Coordinate(34.0000, 85.0000), 0, -90) ) # facing North
-	test_fixtures.append( (Coordinate(34.0000, 85.0000), -45, -45) ) # facing North-West
-	test_fixtures.append( (Coordinate(34.0000, 85.0000), -90, 0) ) # facing West
-	test_fixtures.append( (Coordinate(34.0000, 85.0000), -135, 45) ) # facing South-West
-	test_fixtures.append( (Coordinate(34.0000, 85.0000), 180, 90) ) # facing South
-	test_fixtures.append( (Coordinate(34.0000, 85.0000), 135, 135) ) # facing South-East
+	test_fixtures.append( (Coordinate(35.0000, 84.0000), 90, 180) ) # facing East
+	test_fixtures.append( (Coordinate(35.0000, 84.0000), 45, -135) ) # facing North-East
+	test_fixtures.append( (Coordinate(35.0000, 84.0000), 0, -90) ) # facing North
+	test_fixtures.append( (Coordinate(35.0000, 84.0000), -45, -45) ) # facing North-West
+	test_fixtures.append( (Coordinate(35.0000, 84.0000), -90, 0) ) # facing West
+	test_fixtures.append( (Coordinate(35.0000, 84.0000), -135, 45) ) # facing South-West
+	test_fixtures.append( (Coordinate(35.0000, 84.0000), 180, 90) ) # facing South
+	test_fixtures.append( (Coordinate(35.0000, 84.0000), 135, 135) ) # facing South-East
 	# Goal is to the South
-	test_fixtures.append( (Coordinate(35.0000, 84.0000), 90, 90) ) # facing East
-	test_fixtures.append( (Coordinate(35.0000, 84.0000), 45, 135) ) # facing North-East
-	test_fixtures.append( (Coordinate(35.0000, 84.0000), 0, 180) ) # facing North
-	test_fixtures.append( (Coordinate(35.0000, 84.0000), -45, -135) ) # facing North-West
-	test_fixtures.append( (Coordinate(35.0000, 84.0000), -90, -90) ) # facing West
-	test_fixtures.append( (Coordinate(35.0000, 84.0000), -135, -45) ) # facing South-West
-	test_fixtures.append( (Coordinate(35.0000, 84.0000), 180, 0) ) # facing South
-	test_fixtures.append( (Coordinate(35.0000, 84.0000), 135, 45) ) # facing South-East
+	test_fixtures.append( (Coordinate(34.0000, 85.0000), 90, 90) ) # facing East
+	test_fixtures.append( (Coordinate(34.0000, 85.0000), 45, 135) ) # facing North-East
+	test_fixtures.append( (Coordinate(34.0000, 85.0000), 0, 180) ) # facing North
+	test_fixtures.append( (Coordinate(34.0000, 85.0000), -45, -135) ) # facing North-West
+	test_fixtures.append( (Coordinate(34.0000, 85.0000), -90, -90) ) # facing West
+	test_fixtures.append( (Coordinate(34.0000, 85.0000), -135, -45) ) # facing South-West
+	test_fixtures.append( (Coordinate(34.0000, 85.0000), 180, 0) ) # facing South
+	test_fixtures.append( (Coordinate(34.0000, 85.0000), 135, 45) ) # facing South-East
 	# test if expectations are met
 	for coordinate,heading,expected_angle in test_fixtures:
 		calculated_angle = gps.get_desired_heading(heading, coordinate)

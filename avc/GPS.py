@@ -35,7 +35,7 @@ class GPS(ProcessDriver):
 		"""
 		Returns boolean explaining whether or not gps has a fix
 		"""
-		if self.current_coordinate.timestamp is not None:
+		if self.current_coordinate.latitude != 0.0 or self.current_coordinate.longitude != 0.0:
 			return True
 		else:
 			return False 

@@ -38,6 +38,7 @@ class Nodelist(object):
 			self.current_node_index += 1
 			return True
 		else:
+			self.current_node_index += 1
 			return False
 
 	def get_next_node(self):
@@ -51,7 +52,7 @@ class Nodelist(object):
 				print self.current_node_index
 				raise e
 	def all_nodes_visited(self):
-		return not self.current_node_index < len(self.nodelist)-1
+		return not self.current_node_index < len(self.nodelist)
 
 
 	@staticmethod

@@ -45,7 +45,7 @@ def create_objects(config):
 			sleep(0.1)
 	# stop car
 	arduino.commandReset()
-	sleep(0.5)
+	sleep(2)
 	# print possible exceptions
 	print "Exception ({}): {}".format("GPS",gps.get_raised_exception())
 	print "Exception ({}): {}".format("COMPASS",compass.get_raised_exception())

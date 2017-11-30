@@ -8,6 +8,13 @@
 			"throttle": 1
 		},
 		{
+			"coordinate":{
+				"latitude": 39.234283,
+				"longitude": -94.52499
+			},
+			"throttle": 1
+		},
+		{
 			"coordinate": {
 				"latitude": 39.23450,
 				"longitude": -94.52502

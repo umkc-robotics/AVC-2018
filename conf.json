@@ -4,7 +4,7 @@
 	"gps": {
 		"port": "/dev/gps_avc",
 		"baud": 9600,
-		"minimum_overlap": 0.0001
+		"minimum_overlap": 0.00006
 	},
 	"compass": {
 		"declination_deg": 1.61667,

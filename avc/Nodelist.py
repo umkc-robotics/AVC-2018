@@ -41,13 +41,17 @@ class Nodelist(object):
 			return False
 
 	def get_next_node(self):
-		if not (self.increment_node()):
+		success = self.increment_node()
+		if not success:
 			return None
 		else:
-			return self.nodelist[self.current_node_index]
-
+			try:
+				return self.nodelist[self.current_node_index]
+			except IndexError as e:
+				print self.current_node_index
+				raise e
 	def all_nodes_visited(self):
-		return self.current_node_index >= len(self.nodelist)
+		return not self.current_node_index < len(self.nodelist)
 
 
 	@staticmethod

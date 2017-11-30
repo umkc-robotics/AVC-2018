@@ -30,21 +30,22 @@ def create_objects(config):
 	while not nodelist.all_nodes_visited() and gps.is_properly_alive() and compass.is_properly_alive() and arduino.is_properly_alive():
 		# if at coordinate, get next node and start from top of loop
 		if gps.is_overlapping(node):
-			print nodelist.current_node_index
 			node = nodelist.get_next_node()
-			print nodelist.current_node_index
-		else:
-			desiredHeading = gps.get_desired_heading(compass.get_heading(), node)
-			print node.get_coordinate()
-			print gps.get_location()
-			print gps.calculate_angle_to_node(node.get_coordinate())
-			print compass.get_heading()
-			print "Desired: {}".format(desiredHeading)
-			arduino.commandTurn(desiredHeading)
-			arduino.commandForward(node.get_throttle())
-			sleep(0.1)
+			continue
+		desiredHeading = gps.get_desired_heading(compass.get_heading(), node)
+		print node.get_coordinate()
+		print gps.get_location()
+		print gps.calculate_angle_to_node(node.get_coordinate())
+		print compass.get_heading()
+		print "Desired: {}".format(desiredHeading)
+		arduino.commandTurn(desiredHeading)
+		sleep(0.1)
+		arduino.commandForward(node.get_throttle())
+		sleep(0.1)
 	# stop car
-	arduino.commandReset()
+	for i in range(0,10):
+		arduino.commandReset()
+		sleep(0.005)
 	sleep(2)
 	# print possible exceptions
 	print "Exception ({}): {}".format("GPS",gps.get_raised_exception())

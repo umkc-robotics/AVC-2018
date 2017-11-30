@@ -161,9 +161,13 @@ class ArduinoComm(ProcessDriver):
 		self.arduino_ready = False
 		ProcessDriver.__init__(self, arduino_process, (conf,))
 		self.daemon = conf["daemon"]
+		self.turn_deadzone = conf["arduino"]["turn_deadzone"]
 
 	# Steering Commands
 	def commandTurn(self, angle):
+		# if angle is less than turn deadzone, set it to zero
+		if abs(angle) < self.turn_deadzone:
+			angle = 0
 		cmd = Command("t",str(round(angle)))
 		self.send_through_pipe(cmd)
 

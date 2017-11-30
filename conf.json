@@ -13,7 +13,8 @@
 	"arduino": {
 		"port": "/dev/arduino_avc",
 		"baud": 9600,
-		"timeout": 1
+		"timeout": 1,
+		"turn_deadzone": 3
 	},
 	"nodelist": {
 		"file": "nodes.json"

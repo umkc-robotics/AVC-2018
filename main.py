@@ -39,15 +39,14 @@ def create_objects(config):
 		print compass.get_heading()
 		print "Desired: {}".format(desiredHeading)
 		arduino.commandTurn(desiredHeading)
-		#if gps.is_fixed():
-		#	print "Location: {}".format(gps.get_location())
-		#else:
-		#	print "No fix yet"
-		#if compass.is_connected():
-		#	print "Heading: {}".format(compass.get_heading())
-		#else:
-		#	print "Compass NOT connected"
 		sleep(0.1)
+		arduino.commandForward(node.get_throttle())
+		sleep(0.1)
+	# stop car
+	for i in range(0,10):
+		arduino.commandReset()
+		sleep(0.005)
+	sleep(2)
 	# print possible exceptions
 	print "Exception ({}): {}".format("GPS",gps.get_raised_exception())
 	print "Exception ({}): {}".format("COMPASS",compass.get_raised_exception())

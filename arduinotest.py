@@ -16,7 +16,7 @@ def arduino_console(config):
 			command = input_list[0]
 			if command in ["f","b"]:
 				try:
-					value = str(int(input_list[1]))
+					value = int(str(int(input_list[1])))
 					if command == "f":
 						arduino.commandForward(value)
 					elif command == "b":
@@ -29,7 +29,7 @@ def arduino_console(config):
 					print "Bad input: command formation failed; {}".format(str(e))
 			elif command == "t":
 				try:
-					value = str(int(input_list[1]))
+					value = int(str(int(input_list[1])))
 					arduino.commandTurn(value)
 				except IndexError as e:
 					print "Bad Input: no second value found; {}".format(str(e))

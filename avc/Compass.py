@@ -78,7 +78,7 @@ class Compass(ProcessDriver):
         elif isinstance(input_obj, bool):
             self.compass_connected = input_obj
         else:
-            print "RECEIVED WEIRD INPUT: {}".format(input_obj)
+            print("RECEIVED WEIRD INPUT: {}".format(input_obj))
 
 
 
@@ -109,7 +109,7 @@ def compass_process(conf, comm_pipe):
 
     except Exception as e:
     	try:
-        	print "SENDING ERROR..."
+        	print("SENDING ERROR...")
         	comm_pipe.send(e)
         except IOError as e:
         	pass

@@ -31,7 +31,7 @@ class CompassCalibrator(Compass):
 		elif isinstance(input_obj, bool):
 			self.compass_connected = input_obj
 		else:
-			print "RECEIVED WEIRD INPUT: {}".format(input_obj)
+			print("RECEIVED WEIRD INPUT: {}".format(input_obj))
 
 
 
@@ -90,14 +90,14 @@ def calibration_terminal(config):
 
 	while compass.is_properly_alive():
 		user_inp = userInput.returnMessage()
-		if user_inp != None:
+		if user_inp is not None:
 			user_inp = user_inp.lower()
 			if user_inp == "exit":
 				break
 			elif user_inp == "c":
 				data_for_calibration = compass.get_and_reset_data()
 				calibration_data = perform_calibration(data_for_calibration)
-				print calibration_data
+				print(calibration_data)
 				save_calibration_to_file(config,calibration_data)
 				show_data_with_calibration(data_for_calibration,calibration_data)
 			elif user_inp == "s":
@@ -109,10 +109,10 @@ def calibration_terminal(config):
 	compass.stop()
 	userInput.markToStop()
 	if compass.get_raised_exception() is not None:
-		print compass.get_raised_exception()
+		print(compass.get_raised_exception())
 
 
 if __name__ == "__main__":
 	config = ConfigReader.read_json("conf.json")
-	print config
+	print(config)
 	calibration_terminal(config)

@@ -63,11 +63,11 @@ def see_if_thread_is_messed_up():
 		objects[i].stop()
 	sleep(.1)
 	for i in range(0,total_objects):
-		print "Exception? {},{}".format(i,objects[i].raised_exception)
+		print("Exception? {},{}".format(i,objects[i].raised_exception))
 	for i in range(0,total_objects):
-		print "Count: {},{}".format(i,objects[i].count)
-	print "Total: {}".format(sum([x.count for x in objects]))
-	print "done now"
+		print("Count: {},{}".format(i,objects[i].count))
+	print("Total: {}".format(sum([x.count for x in objects])))
+	print("done now")
 
 
 
@@ -78,9 +78,9 @@ def print_stuff(stuff, comm_pipe):
 		while keep_running:
 			if comm_pipe.poll():
 				received = comm_pipe.recv()
-				print received
+				print(received)
 				if received == "EXIT":
-					print "Received SIGNAL TO EXIT"
+					print("Received SIGNAL TO EXIT")
 					keep_running = False
 			try:
 				if count % 10 == 0:

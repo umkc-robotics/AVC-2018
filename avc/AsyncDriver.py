@@ -48,7 +48,7 @@ class DriverBase(Thread):
 		Returns: None
 		Raises: Some form of exception, likely the error parameter
 		"""
-		print "RECEIVED ERROR"
+		print("RECEIVED ERROR")
 		raise error
 
 	def stop(self):

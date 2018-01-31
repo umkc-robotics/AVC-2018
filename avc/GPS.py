@@ -107,13 +107,13 @@ class GPS(ProcessDriver):
 		if isinstance(input_obj, Coordinate):
 			self.current_coordinate = input_obj
 		else:
-			print "RECEIVED WEIRD INPUT: {}".format(input_obj)
+			print("RECEIVED WEIRD INPUT: {}".format(input_obj))
 
 
 
 def gps_process(conf, comm_pipe):
 	gps_serial = None
-	print "GPS PROCESS STARTED"
+	print("GPS PROCESS STARTED")
 	try:
 		keep_running = True
 		# start serial process, raise a GPS exception if fails
@@ -121,7 +121,7 @@ def gps_process(conf, comm_pipe):
 			gps_serial = Serial(conf["gps"]["port"],conf["gps"]["baud"])
 		except SerialException as e:
 			raise GPS_Exception(e)
-		print "CONNECTED TO GPS"
+		print("CONNECTED TO GPS")
 		while keep_running:
 			# check pipe for messages
 			if comm_pipe.poll():
@@ -140,10 +140,10 @@ def gps_process(conf, comm_pipe):
 
 	except Exception as e:
 		try:
-			print "SENDING ERROR..."
+			print("SENDING ERROR...")
 			comm_pipe.send(e)
 		except IOError as e:
-			print "IO ERROR on GPS"
+			print("IO ERROR on GPS")
 	finally:
 		if isinstance(gps_serial,Serial):
 			gps_serial.close()

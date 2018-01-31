@@ -231,7 +231,7 @@ class ArduinoComm(ProcessDriver):
 			elif input_obj.command == "ready":
 				self.arduino_ready = True
 		elif input_obj is not None:
-			print "RECEIVED WEIRD INPUT: {}".format(input_obj)
+			print("RECEIVED WEIRD INPUT: {}".format(input_obj))
 
 	# Send command through pipe
 	def send_through_pipe(self, command):
@@ -279,7 +279,7 @@ class ArduinoComm(ProcessDriver):
 
 def arduino_process(conf, comm_pipe):
 	arduino_serial = None
-	print "ARDUINO PROCESS STARTED"
+	print("ARDUINO PROCESS STARTED")
 	try:
 		keep_running = True
 		# start serial process, raise a ArduinoComm exception if fails
@@ -287,7 +287,7 @@ def arduino_process(conf, comm_pipe):
 			arduino_serial = Serial(conf["arduino"]["port"],conf["arduino"]["baud"],timeout=conf["arduino"]["timeout"])
 		except SerialException as e:
 			raise ArduinoCommException(e)
-		print "CONNECTED TO ARDUINO"
+		print("CONNECTED TO ARDUINO")
 		while keep_running:
 			# check pipe for messages
 			if comm_pipe.poll():
@@ -308,7 +308,7 @@ def arduino_process(conf, comm_pipe):
 
 	except Exception as e:
 		try:
-			print "SENDING ERROR..."
+			print("SENDING ERROR...")
 			comm_pipe.send(e)
 		except IOError as e:
 			pass

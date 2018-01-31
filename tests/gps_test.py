@@ -45,7 +45,7 @@ def test_gps_is_minimally_overlapping():
 	test_coordinates.append(Coordinate(30.0000, -80.0000-overlap))
 	test_coordinates.append(Coordinate(30.0000, -80.0000+overlap))
 	for coordinate in test_coordinates:
-		print coordinate
+		print(coordinate)
 		assert gps.is_overlapping(coordinate)
 
 def test_gps_is_not_overlapping():
@@ -65,7 +65,7 @@ def test_gps_is_minimally_not_overlapping():
 	test_coordinates.append(Coordinate(30.0000, -80.0000-overlap))
 	test_coordinates.append(Coordinate(30.0000, -80.0000+overlap))
 	for coordinate in test_coordinates:
-		print coordinate
+		print(coordinate)
 		assert not gps.is_overlapping(coordinate)
 
 # angle between nodes tests
@@ -84,7 +84,7 @@ def test_gps_angles_make_sense():
 	test_fixtures.append( (Coordinate(35.0000, 85.0000), 0) ) # desired is Unchanged
 	for coordinate,expected_angle in test_fixtures:
 		calculated_angle = gps.calculate_angle_to_node(coordinate)
-		print "calc: {}, expect: {}".format(calculated_angle,expected_angle)
+		print("calc: {}, expect: {}".format(calculated_angle,expected_angle))
 		assert calculated_angle == expected_angle
 
 # relative angle to goal test
@@ -131,7 +131,7 @@ def test_gps_relative_angle_to_goal():
 	# test if expectations are met
 	for coordinate,heading,expected_angle in test_fixtures:
 		calculated_angle = gps.get_desired_heading(heading, coordinate)
-		print "calc: {}, expect: {}".format(calculated_angle,expected_angle)
+		print("calc: {}, expect: {}".format(calculated_angle,expected_angle))
 		assert calculated_angle == expected_angle 
 
 # END TESTS

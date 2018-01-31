@@ -13,12 +13,12 @@ def generate_random_strings_with_checksum(repeats):
 		try:
 			newcommand = Command(commandString)
 		except CommandException as e:
-			print "{} --> {}".format(str(e),commandString)
+			print("{} --> {}".format(str(e),commandString))
 		else:
-			print "------"
-			print newcommand
-			print ord(str(newcommand)[-1])
-			print "------"
+			print("------")
+			print(newcommand)
+			print(ord(str(newcommand)[-1]))
+			print("------")
 
 def get_common_checksums_wrapper(min_length, max_length, min_char=33, max_char=126, max_length_only=True):
 	common_dict = {}
@@ -94,12 +94,12 @@ def combine_dicts(dict1,dict2):
 
 def print_dict(dict1):
 	for key,value in sorted(dict1.iteritems()):
-		print "{}: {}".format(key,value)
+		print("{}: {}".format(key,value))
 
 def print_dict_normalized(dict1):
 	max_val = float(max(dict1.values()))
 	for key,value in sorted(dict1.iteritems()):
-		print "{}: {:.2f}  -->  {}".format(key,value/max_val,value)
+		print("{}: {:.2f}  -->  {}".format(key,value/max_val,value))
 
 def checksum_distribution():
 	old_dict = {}
@@ -115,12 +115,12 @@ def checksum_distribution():
 		combine_dicts(old_dict,new_dict)
 	print_dict_normalized(old_dict)
 
-	print "-----"
+	print("-----")
 
 if __name__=="__main__":
 	#print Command("gb")
 	
-	print Command("ready")
+	print(Command("ready"))
 	#checksum_distribution()
 	
 

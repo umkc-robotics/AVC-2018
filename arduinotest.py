@@ -22,38 +22,38 @@ def arduino_console(config):
 					elif command == "b":
 						arduino.commandBackward(value)
 				except IndexError as e:
-					print "Bad Input: no second value found; {}".format(str(e))
+					print("Bad Input: no second value found; {}".format(str(e)))
 				except ValueError as e:
-					print "Bad input: value must be an integer; {}".format(str(e))
+					print("Bad input: value must be an integer; {}".format(str(e)))
 				except CommandException as e:
-					print "Bad input: command formation failed; {}".format(str(e))
+					print("Bad input: command formation failed; {}".format(str(e)))
 			elif command == "t":
 				try:
 					value = int(str(int(input_list[1])))
 					arduino.commandTurn(value)
 				except IndexError as e:
-					print "Bad Input: no second value found; {}".format(str(e))
+					print("Bad Input: no second value found; {}".format(str(e)))
 				except ValueError as e:
-					print "Bad input: value must be an integer; {}".format(str(e))
+					print("Bad input: value must be an integer; {}".format(str(e)))
 				except CommandException as e:
-					print "Bad input: command formation failed; {}".format(str(e))
+					print("Bad input: command formation failed; {}".format(str(e)))
 			elif command == "stop":
 				try:
 					arduino.commandStop()
 				except CommandException as e:
-					print "Bad input: command formation failed; {}".format(str(e))
+					print("Bad input: command formation failed; {}".format(str(e)))
 			elif command == "straight":
 				try:
 					arduino.commandStraight()
 				except CommandException as e:
-					print "Bad input: command formation failed; {}".format(str(e))
+					print("Bad input: command formation failed; {}".format(str(e)))
 			elif command == "reset":
 				try:
 					arduino.commandReset()
 				except CommandException as e:
-					print "Bad input: command formation failed; {}".format(str(e))
+					print("Bad input: command formation failed; {}".format(str(e)))
 	except Exception as e:
-		print str(e)
+		print(str(e))
 
 	arduino.commandReset()
 	sleep(1)
@@ -63,5 +63,5 @@ def arduino_console(config):
 
 if __name__ == "__main__":
 	config = ConfigReader.read_json("conf.json")
-	print config
+	print(config)
 	arduino_console(config)

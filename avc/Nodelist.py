@@ -49,7 +49,7 @@ class Nodelist(object):
 			try:
 				return self.nodelist[self.current_node_index]
 			except IndexError as e:
-				print self.current_node_index
+				print(self.current_node_index)
 				raise e
 	def all_nodes_visited(self):
 		return not self.current_node_index < len(self.nodelist)

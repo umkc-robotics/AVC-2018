@@ -33,6 +33,9 @@ class UserInput(threading.Thread):
 	
 	def markToStop(self):
 		self.keepGoing.set()
+
+	def stop(self):
+		self.markToStop()
 	
 	def isNewMessage(self):
 		return self.newMessage.is_set()

@@ -26,8 +26,20 @@ def node_terminal(config):
 			user_inp = user_inp.lower()
 			if user_inp == "exit":
 				break
+			elif user_inp == "a":
+				pass
+			elif user_inp == "s":
+				pass
+			elif user_inp == "c":
+				pass
 
 		sleep(0.2)
+
+	gps.stop()
+	userInput.stop()
+	if gps.get_raised_exception() is not None:
+		print(gps.get_raised_exception())
+
 
 if __name__ == "__main__":
 	config = ConfigReader.read_json("conf.json")

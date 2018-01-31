@@ -107,7 +107,7 @@ def calibration_terminal(config):
 
 
 	compass.stop()
-	userInput.markToStop()
+	userInput.stop()
 	if compass.get_raised_exception() is not None:
 		print(compass.get_raised_exception())
 

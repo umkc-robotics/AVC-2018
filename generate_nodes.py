@@ -1,6 +1,7 @@
 from avc.ConfigReader import ConfigReader
 from avc.UserInput import UserInput
 from avc.GPS import GPS, GPS_Exception
+from time import sleep
 
 # connect to GPS (connect + wait for fix)
 # while not exited, print latest GPS coordinate
@@ -19,7 +20,7 @@ def node_terminal(config):
 	print("waiting for gps fix...")
 	gps.wait_for_fix()
 	print("gps fix found!")
-
+	gpslist = []
 	while gps.is_properly_alive():
 		user_inp = userInput.returnMessage()
 		if user_inp is not None:
@@ -27,7 +28,7 @@ def node_terminal(config):
 			if user_inp == "exit":
 				break
 			elif user_inp == "a":
-				pass
+				gpslist.append(gps.get_location())
 			elif user_inp == "s":
 				pass
 			elif user_inp == "c":
@@ -39,6 +40,8 @@ def node_terminal(config):
 	userInput.stop()
 	if gps.get_raised_exception() is not None:
 		print(gps.get_raised_exception())
+	for item in gpslist:
+		print item
 
 
 if __name__ == "__main__":

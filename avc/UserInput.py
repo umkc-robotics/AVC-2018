@@ -1,5 +1,6 @@
 from multiprocessing import Pipe
 import threading
+from time import sleep
 
 # get user input in a separate thread
 class UserInput(threading.Thread):

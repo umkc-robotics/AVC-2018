@@ -2,24 +2,24 @@
 	"nodes": [
 		{
 			"coordinate": {
-				"latitude": 39.03257,
-				"longitude": -94.57789667
+				"latitude": 39.2346283333,
+				"longitude": -94.52477
 			},
 			"throttle": 4
 		},
 		{
 			"coordinate":{
-				"latitude": 39.03243,
-				"longitude": -94.5777666667
+				"latitude": 39.2347466667,
+				"longitude": -94.5249516667
 			},
-			"throttle": 20
+			"throttle": 10
 		},
 		{
 			"coordinate": {
-				"latitude": 39.032685,
-				"longitude": -94.5777583333
+				"latitude": 39.234595,
+				"longitude": -94.5249633333
 			},
-			"throttle": 99
+			"throttle": 15
 		}
 	]
 }

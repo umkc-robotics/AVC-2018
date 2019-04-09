@@ -6,8 +6,8 @@
 #include "Adafruit_SSD1306.h"
 
 #define START_BUTTON_PIN 2
-#define ESCPIN 9
-#define STRPIN 8
+#define ESCPIN 8
+#define STRPIN 7
 // command definitions
 #define GOBUTTN "gb"
 #define RESTCMD "rst"

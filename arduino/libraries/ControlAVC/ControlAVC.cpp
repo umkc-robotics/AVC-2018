@@ -31,6 +31,7 @@ void ControlAVC::setForwardThrottle(int throttle) {
 
 void ControlAVC::setBackwardThrottle(int throttle) {
 	throttle = constrain(throttle, MIN_COMMAND_THROTTLE, MAX_COMMAND_THROTTLE);
+	int previous_throttle = current_throttle;
 	if (throttle != 0) {
 		current_throttle = map(throttle, MIN_COMMAND_THROTTLE, MAX_COMMAND_THROTTLE, NEUTRAL-THROTTLE_DEADZONE, NEUTRAL-MAX_ABS_THROTTLE);
 	}
@@ -38,11 +39,11 @@ void ControlAVC::setBackwardThrottle(int throttle) {
 		current_throttle = NEUTRAL;
 	}
 	// if actually told to go backwards, use special movement
-	if (current_throttle != NEUTRAL) {
+	if (current_throttle != NEUTRAL && !(previous_throttle < NEUTRAL)) {
 		ESC.write(NEUTRAL-MAX_ABS_THROTTLE);
-		delay(50);
+		delay(200);
 		ESC.write(NEUTRAL);
-		delay(50);
+		delay(200);
 		ESC.write(current_throttle);
 	}
 	else {

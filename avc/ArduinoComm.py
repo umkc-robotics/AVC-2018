@@ -254,6 +254,7 @@ class ArduinoComm(ProcessDriver):
 				serial_object.write(command.get_formatted_string()+"\n")
 				# wait for response
 				response = serial_object.readline().strip()
+				print('response: {}'.format(response))
 				# if starts with 'n', attempt to resend
 				if len(response) == 1:
 					if response.startswith("n"):

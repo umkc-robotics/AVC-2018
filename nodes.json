@@ -1,39 +1,19 @@
 {
 	"nodes": [
+		
 		{
 			"coordinate": {
-				"latitude": 40.60466,
-				"longitude": -83.12485
+				"latitude": 39.040365,
+				"longitude": -94.5720833333
 			},
 			"throttle": 10
 		},
 		{
 			"coordinate": {
-				"latitude": 40.60465,
-				"longitude": -83.12525
+				"latitude": 39.0403516667,
+				"longitude": -94.5724216667
 			},
-			"throttle": 20
-		},
-		{
-			"coordinate": {
-				"latitude": 40.60425,
-				"longitude": -83.12525
-			},
-			"throttle": 20
-		},
-		{
-			"coordinate": {
-				"latitude": 40.6044,
-				"longitude": -83.1249
-			},
-			"throttle": 20
-		},
-		{
-			"coordinate": {
-				"latitude": 40.6047,
-				"longitude": -83.1249
-			},
-			"throttle": 20
+			"throttle": 10
 		}
 	]
 }

@@ -7,7 +7,7 @@
 		"minimum_overlap": 0.0001
 	},
 	"compass": {
-		"declination_deg": 1.6,
+		"declination_deg": -7.16,
 		"file": "compass_calibration.json"
 	},
 	"arduino": {

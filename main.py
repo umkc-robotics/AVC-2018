@@ -15,11 +15,24 @@ def create_objects(config):
 	gps.start()
 	compass.start()
 	arduino.start()
+
 	# wait for arduino to be ready
 	arduino.wait_for_readiness()
 	# wait for gps to be fixed
 	print("waiting for gps fix...")
 	gps.wait_for_fix()
+
+	if not (gps.is_properly_alive() and compass.is_properly_alive() and arduino.is_properly_alive()):
+		print("Exception ({}): {}".format("GPS",gps.get_raised_exception()))
+		print("Exception ({}): {}".format("COMPASS",compass.get_raised_exception()))
+		print("Exception ({}): {}".format("ARDUINO",arduino.get_raised_exception()))
+		# stop all processes
+		gps.stop()
+		compass.stop()
+		arduino.stop()
+		print("done now!")
+		exit()
+
 	print("gps fix found!")
 	# wait for go button to be pressed
 	print("waiting for go button press...")

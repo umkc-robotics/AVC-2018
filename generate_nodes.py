@@ -3,11 +3,34 @@ from avc.UserInput import UserInput
 from avc.GPS import GPS, GPS_Exception
 from time import sleep
 
+
+
+def walkForNodes(gps):
+	gpslist = []
+	walking = True
+
+	while walking:
+		print("Stop walking (y/n): ")
+		userInput = UserInput()
+		userInput.start()
+		user_inp = userInput.returnMessage()
+
+		if user_inp is not None:
+			if user_inp == "y":
+				walking = False:
+			else:
+				gpslist.append(gps.get_location)
+
+	print('gpslist', gpslist)				
+
+
+def saveNodes():
+	print('saving nodes')
+
 # connect to GPS (connect + wait for fix)
 # while not exited, print latest GPS coordinate
 # if s is entered, current GPS coordinate is added to list
 # if c is entered, a new nodes.json file is created -> displays chart showing coordinates
-
 
 def node_terminal(config):
 	# start gps
@@ -27,6 +50,8 @@ def node_terminal(config):
 			user_inp = user_inp.lower()
 			if user_inp == "exit":
 				break
+			elif user_inp == "walk":
+				gpslist = walkForNodes(gps)
 			elif user_inp == "a":
 				gpslist.append(gps.get_location())
 			elif user_inp == "s":
@@ -42,7 +67,6 @@ def node_terminal(config):
 		print(gps.get_raised_exception())
 	for item in gpslist:
 		print item
-
 
 if __name__ == "__main__":
 	config = ConfigReader.read_json("conf.json")
